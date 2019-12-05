@@ -1,5 +1,7 @@
 Toggl API docs: https://github.com/toggl/toggl_api_docs
 
+Max number of entries for GET request is 1000, should be more than enough for 1 week worth of entries!
+
 Configuration needed:
 - Toggl API token
 - [Advanced] Filter by client / project (only consider one client / one or more projects)
@@ -13,9 +15,7 @@ How to keep track of already logged entries?
 
 How to detect Jira issue for entry?
 
-Should be at start of 
-
-Max number of entries for GET request is 1000, should be more than enough for 1 week worth of entries.
+Should be at start of entry description, enclosed in square brakets: "[CADENZA-12345] Do something"
 
 JIRA
 
