@@ -1,4 +1,4 @@
-const CONFIG_STORAGE_KEY = 'toggl-jira-importer.config';
+const CONFIG_STORAGE_KEY = 'toggl-to-jira.config';
 
 const initialState = {
   togglApiKey: '',

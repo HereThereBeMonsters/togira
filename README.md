@@ -1,4 +1,4 @@
-# toggl-jira-importer
+# toggl-to-jira
 
 ## Project setup
 ```
