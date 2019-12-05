@@ -54,8 +54,27 @@ Import:
 Pages: 
 - Home (with link to config and to start import)
 - Config
-- Start Import: form, set parameters and submit
-- Entries list: show all entries
-- Import result/summary
+- Import: specify start/end dates, in future maybe more filter/options fields? and show list of entries, button to trigger import to Jira
+- Import result/summary (updated while import running)
 
+Next steps:
 
+- Configure server to proxy toggl.com
+- Add Axios lib for Ajax requests
+- create type for Toggl entries
+
+- Add 'toggl' (?) vuex module
+State:
+- startDate, endDate (default: today)
+- entries
+-  
+Actions:
+- getEntries -> get entries from Toggl API, map them to our type with additional fields (or use decorator style wrapping object?) 
+- setDates -> refreshes the entries
+
+- Add 'import' page and routing
+- prevent navigation to import page if configuration not complete (or redirect to config page)
+- input fields for start and end dates with some validation and parsing to Date objects
+- show entries from state
+- load entries on 'mount' or other lifecycle event
+- show spinner while loading
