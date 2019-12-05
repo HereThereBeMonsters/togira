@@ -10,6 +10,6 @@ new Vue({
   store,
   render: h => h(App),
   mounted () {
-    store.dispatch('restoreConfig');
+    store.dispatch('configuration/restore');
   }
 }).$mount('#app');

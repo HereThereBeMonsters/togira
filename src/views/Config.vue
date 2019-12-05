@@ -12,7 +12,6 @@
         <label>Jira base URL:</label>
         <input type="text" placeholder="Enter the URL of the Jira server you want to import to" v-model="jiraBaseUrl">
       </div>
-
     </form>
   </div>
 </template>
@@ -25,14 +24,14 @@ export default {
   components: {},
   computed: {
     isConfigComplete: function () {
-      return store.getters.isConfigComplete;
+      return store.getters['configuration/isComplete'];
     },
     togglApiKey: {
       get: function () {
         return store.state.configuration.togglApiKey;
       },
       set: function (value) {
-        store.commit('togglApiKey', {
+        store.commit('configuration/togglApiKey', {
           togglApiKey: value
         });
       }
@@ -42,7 +41,7 @@ export default {
         return store.state.configuration.jiraBaseUrl;
       },
       set: function (value) {
-        store.commit('jiraBaseUrl', {
+        store.commit('configuration/jiraBaseUrl', {
           jiraBaseUrl: value
         });
       }
