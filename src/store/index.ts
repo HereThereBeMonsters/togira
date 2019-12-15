@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import configuration from './modules/config';
+import configuration from '@/store/modules/config';
+import togglEntries from '@/store/modules/toggl-entries';
 
 Vue.use(Vuex);
 
@@ -9,6 +10,7 @@ export default new Vuex.Store({
   mutations: {},
   actions: {},
   modules: {
-    configuration
+    configuration,
+    togglEntries
   }
 });

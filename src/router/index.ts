@@ -11,12 +11,12 @@ const routes = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'about',
+    path: '/toggl-entries',
+    name: 'toggl-entries',
     // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
+    // this generates a separate chunk (toggl-entries.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import(/* webpackChunkName: "toggl-entries" */ '../views/TogglEntries.vue')
   },
   {
     path: '/config',

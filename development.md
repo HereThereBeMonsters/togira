@@ -59,8 +59,8 @@ Pages:
 
 Next steps:
 
-- Configure server to proxy toggl.com
-- Add Axios lib for Ajax requests
+- Configure server to proxy toggl.com - OK
+- Add Axios lib for Ajax requests - OK
 - create type for Toggl entries
 
 - Add 'toggl' (?) vuex module
