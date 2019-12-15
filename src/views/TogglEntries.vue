@@ -2,13 +2,38 @@
   <div>
     <div>
       <h1>Toggl entries</h1>
-      <p>Click the button to load your Toggl entries</p>
-      <button v-on:click="loadEntries">Load Toggle entries</button>
+      <button v-on:click="loadEntries">
+        {{entries ? 'Refresh entries' : 'Load Toggle entries'}}
+      </button>
     </div>
-    <div>
-      <ul>
-        <li v-for="entry in entries" v-bind:key="entry.id">{{entry.description}}</li>
-      </ul>
+    <div v-if="loading">Loading entries from Toggl...</div>
+    <div v-if="entries && !loading">
+      <table border="1">
+        <thead>
+        <tr>
+          <td>Start time</td>
+          <td>Stop time</td>
+          <td>Duration</td>
+          <td>Description</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="entry in entries" v-bind:key="entry.id">
+          <td>
+            {{entry.start}}
+          </td>
+          <td>
+            {{entry.stop}}
+          </td>
+          <td>
+            {{entry.duration}}
+          </td>
+          <td>
+            {{entry.description}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -20,6 +45,9 @@ export default {
   computed: {
     entries: function () {
       return this.$store.state.togglEntries.entries;
+    },
+    loading () {
+      return this.$store.state.togglEntries.loading;
     }
   },
   methods: {

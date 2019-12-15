@@ -1,8 +1,7 @@
 const CONFIG_STORAGE_KEY = 'toggl-to-jira.config';
 
 const initialState = {
-  togglApiKey: '',
-  jiraBaseUrl: ''
+  togglApiKey: ''
 };
 
 const configuration = {
@@ -11,18 +10,13 @@ const configuration = {
 
   getters: {
     isComplete (state: any) {
-      return !!(state.togglApiKey &&
-        state.jiraBaseUrl);
+      return !!(state.togglApiKey);
     }
   },
 
   mutations: {
     togglApiKey (state: any, payload: any) {
       state.togglApiKey = payload.togglApiKey;
-      persistConfig(state);
-    },
-    jiraBaseUrl (state: any, payload: any) {
-      state.jiraBaseUrl = payload.jiraBaseUrl;
       persistConfig(state);
     }
   },
