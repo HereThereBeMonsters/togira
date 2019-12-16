@@ -11,22 +11,26 @@
       <table border="1">
         <thead>
         <tr>
-          <td>Start time</td>
-          <td>Stop time</td>
+          <td>Day</td>
+          <td>Time</td>
           <td>Duration</td>
+          <td>Jira issue</td>
           <td>Description</td>
         </tr>
         </thead>
         <tbody>
         <tr v-for="entry in entries" v-bind:key="entry.id">
           <td>
-            {{entry.start}}
+            {{entry.day}}
           </td>
           <td>
-            {{entry.stop}}
+            {{entry.startTime}} - {{entry.endTime}}
           </td>
           <td>
-            {{entry.duration}}
+            {{entry.durationFormatted}}
+          </td>
+          <td>
+            {{entry.jiraIssue}}
           </td>
           <td>
             {{entry.description}}
