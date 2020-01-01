@@ -8,6 +8,8 @@
     </div>
     <div v-if="loading">Loading entries from Toggl...</div>
     <div v-if="entries && !loading">
+
+      <!--
       <table border="1">
         <thead>
         <tr>
@@ -38,11 +40,15 @@
         </tr>
         </tbody>
       </table>
+      -->
+      <time-entry v-for="entry in entries" v-bind:key="entry.id" v-bind:timeEntry="entry"/>
     </div>
   </div>
 </template>
 
 <script>
+
+import TimeEntryComponent from '@/components/TimeEntryComponent.vue';
 
 export default {
   name: 'toggl-entries',
@@ -59,6 +65,8 @@ export default {
       this.$store.dispatch('togglEntries/loadEntries');
     }
   },
-  components: {}
+  components: {
+    'time-entry': TimeEntryComponent
+  }
 };
 </script>
