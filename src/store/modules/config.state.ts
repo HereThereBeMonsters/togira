@@ -1,7 +1,10 @@
 const CONFIG_STORAGE_KEY = 'toggl-to-jira.config';
 
 const initialState = {
-  togglApiKey: ''
+  togglApiKey: '',
+  jiraTargetHost: '',
+  jiraUsername: '',
+  jiraPassword: ''
 };
 
 const configuration = {
@@ -18,6 +21,18 @@ const configuration = {
     togglApiKey (state: any, payload: any) {
       state.togglApiKey = payload.togglApiKey;
       persistConfig(state);
+    },
+    jiraTargetHost (state: any, payload: any) {
+      state.jiraTargetHost = payload.jiraTargetHost;
+      persistConfig(state);
+    },
+    jiraUsername (state: any, payload: any) {
+      state.jiraUsername = payload.jiraUsername;
+      persistConfig(state);
+    },
+    jiraPassword (state: any, payload: any) {
+      state.jiraPassword = payload.jiraPassword;
+      persistConfig(state);
     }
   },
 
@@ -28,11 +43,19 @@ const configuration = {
   }
 };
 
+/**
+ * Persist config state into local storage.
+ * @param configState
+ */
 function persistConfig (configState: any) {
   const configJson = JSON.stringify(configState);
   localStorage.setItem(CONFIG_STORAGE_KEY, configJson);
 }
 
+/**
+ * Restore config state from local storage.
+ * @param commit
+ */
 function restoreConfig (commit: any) {
   let persistedConfigJson = localStorage.getItem(CONFIG_STORAGE_KEY);
   if (persistedConfigJson) {
@@ -44,6 +67,12 @@ function restoreConfig (commit: any) {
   }
 }
 
+/**
+ * Extract single config field from object loaded from local storage.
+ * @param persistedConfig The persisted config state read from local storage
+ * @param commit
+ * @param fieldName Name of the field to restore.
+ */
 function restoreConfigField (persistedConfig: any, commit: any, fieldName: string) {
   const value = persistedConfig[fieldName];
   if (value) {
