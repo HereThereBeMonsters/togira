@@ -8,39 +8,11 @@
     </div>
     <div v-if="loading">Loading entries from Toggl...</div>
     <div v-if="entries && !loading">
-
-      <!--
-      <table border="1">
-        <thead>
-        <tr>
-          <td>Day</td>
-          <td>Time</td>
-          <td>Duration</td>
-          <td>Jira issue</td>
-          <td>Description</td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="entry in entries" v-bind:key="entry.id">
-          <td>
-            {{entry.day}}
-          </td>
-          <td>
-            {{entry.startTime}} - {{entry.endTime}}
-          </td>
-          <td>
-            {{entry.durationFormatted}}
-          </td>
-          <td>
-            {{entry.jiraIssue}}
-          </td>
-          <td>
-            {{entry.description}}
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      -->
+      <div>
+        {{selectedEntries.length}} of {{entries.length}} entries selected.
+        <button v-on:click="selectAll()">Select all</button>
+        <button v-on:click="selectAll(false)">Select none</button>
+      </div>
       <time-entry v-for="entry in entries" v-bind:key="entry.id" v-bind:timeEntry="entry"/>
     </div>
   </div>
@@ -56,6 +28,9 @@ export default {
     entries: function () {
       return this.$store.state.togglEntries.entries;
     },
+    selectedEntries: function () {
+      return this.$store.state.togglEntries.entries.filter(entry => entry.selected);
+    },
     loading () {
       return this.$store.state.togglEntries.loading;
     }
@@ -63,6 +38,9 @@ export default {
   methods: {
     loadEntries: function () {
       this.$store.dispatch('togglEntries/loadEntries');
+    },
+    selectAll: function (value = true) {
+      this.entries.forEach(entry => (entry.selected = value));
     }
   },
   components: {
