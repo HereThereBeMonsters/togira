@@ -13,6 +13,9 @@
         <button v-on:click="selectAll()">Select all</button>
         <button v-on:click="selectAll(false)">Select none</button>
       </div>
+      <div>
+        <button v-on:click="importSelectedEntries()">Import selected entries to Jira</button>
+      </div>
       <time-entry v-for="entry in entries" v-bind:key="entry.id" v-bind:timeEntry="entry"/>
     </div>
   </div>
@@ -41,6 +44,9 @@ export default {
     },
     selectAll: function (value = true) {
       this.entries.forEach(entry => (entry.selected = value));
+    },
+    importSelectedEntries () {
+      this.$store.dispatch('togglEntries/importSelectedEntries');
     }
   },
   components: {

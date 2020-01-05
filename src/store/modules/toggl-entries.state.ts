@@ -1,4 +1,7 @@
 import { ToggleApiClient } from '@/toggl-api/toggl-api-client';
+import JiraApiClient from '@/jira-api/jira-api-client';
+import TimeEntry from '@/toggl-api/time-entry';
+import { AxiosError, AxiosResponse } from 'axios';
 
 const initialState = {
   entries: null,
@@ -9,7 +12,11 @@ const togglEntries = {
   namespaced: true,
   state: initialState,
 
-  getters: {},
+  getters: {
+    selectedEntries: (state: any) => {
+      return state.entries.filter((entry:TimeEntry) => entry.selected);
+    }
+  },
 
   mutations: {
     entries (state: any, payload: any) {
@@ -31,6 +38,25 @@ const togglEntries = {
         commit('entries', { entries });
         commit('loading', { loading: false });
       });
+    },
+
+    // @ts-ignore
+    loadJiraIssueTest ({ rootState, dispatch, commit, getters, rootGetters }) {
+      const config = rootState.configuration;
+      const jira = new JiraApiClient(config.jiraTargetHost, config.jiraUsername, config.jiraPassword);
+      jira.getJiraIssue('CADENZA-13381')
+        .then((issue: any) => console.log(issue));
+    },
+
+    // @ts-ignore
+    importSelectedEntries ({ rootState, dispatch, commit, getters, rootGetters }) {
+      const config = rootState.configuration;
+
+      const jira = new JiraApiClient(config.jiraTargetHost, config.jiraUsername, config.jiraPassword);
+
+      const selectedEntries = getters.selectedEntries;
+
+      jira.addWorkLogs(selectedEntries);
     }
   }
 };
