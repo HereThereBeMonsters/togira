@@ -1,8 +1,9 @@
 <template>
-  <div id="app" >
-    <div class="uk-background-primary uk-light uk-padding-small">
-      <span class="">Toggl-to-Jira</span>
+  <div id="app">
+    <div class="uk-background-primary uk-light uk-padding-small banner">
+      <img src="./assets/logo_text_big.png" alt="Magnificent Toggira Logo - End The Pain!">
     </div>
+
     <nav uk-navbar class="uk-navbar-container">
       <div class="uk-navbar-left">
         <ul class="uk-navbar-nav">
@@ -16,47 +17,42 @@
       </div>
     </nav>
 
-    <!--    <div id="nav">
-          <router-link to="/">Home</router-link> |
-      <router-link to="/toggl-entries">Toggl entries</router-link> |
-      <router-link to="/config">Config</router-link>
-    </div>-->
     <div class="uk-container">
       <div class="uk-grid">
         <router-view/>
       </div>
     </div>
   </div>
+
 </template>
 
 <style lang="less">
 @import "../node_modules/uikit/src/less/uikit.theme.less";
 
-.uk-navbar-container {
-  border-bottom: 1px solid lightblue;
-}
-/*
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+@global-color: #666;
+@global-emphasis-color: #333;
+@global-muted-color: #999;
+@global-link-color: #C56368;
+@global-link-hover-color: #e2787d;
+
+@global-inverse-color: #D6DD88;
+@global-background: #fff;
+
+@global-muted-background: #D6DD88;
+@global-primary-background: #4060A1;
+@global-secondary-background: #222;
+
+@global-font-family: 'Roboto', sans-serif;
+@global-font-size: 16px;
+
+.banner {
+  padding: 10px;
+
+  & img {
+    max-height: 75px;
+  }
 }
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-*/
 </style>
 
 <script>

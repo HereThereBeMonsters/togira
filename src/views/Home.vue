@@ -1,5 +1,10 @@
 <template>
-  <div class="home"></div>
+  <div class="home">
+    <h2>Welcome</h2>
+    <p>
+      Welcome to Toggira.
+    </p>
+  </div>
 </template>
 
 <script>
