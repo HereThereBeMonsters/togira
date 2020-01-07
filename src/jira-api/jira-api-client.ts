@@ -15,57 +15,21 @@ export default class JiraApiClient {
     this.basicAuthToken = toBasicAuthToken(username, password);
   }
 
-  getJiraIssue (issueKey: string): any {
-    return axios.get(`${this.basePath}/issue/${issueKey}`, {
-      headers: this.createHeaders()
-    });
-  }
-
-  addWorkLogs (entries: Array<TimeEntry>): Promise<any> {
-    const promises = entries
-      .map((entry:TimeEntry) => {
-        this
-          .getJiraIssue(entry.jiraIssue!)
-          .then((response: AxiosResponse) => {
-            console.log(`get jira issue ${entry.jiraIssue} OK`, response);
-            return entry;
-          })
-          .catch((error:AxiosError) => {
-            if (error.response) {
-              if (error.response.status === 404) {
-                return `Jira issue ${entry.jiraIssue} does not exist (HTTP 404).`;
-              }
-            }
-            console.log(`error getting jira issue ${entry.jiraIssue}`, error);
-            return `Unexpected error: ${error.message}`;
-          })
-          .then((entryOrError: any) => {
-            if (typeof entryOrError === 'string') {
-              return entryOrError;
-            }
-
-            const entry = <TimeEntry> entryOrError;
-
-            this.addWorkLog(entry.jiraIssue!, {
-              comment: entry.description,
-              started: removeColumnFromTimezoneOffset(entry.start.toISO()),
-              timeSpentSeconds: entry.duration.as('seconds')
-            });
-          });
-      });
-
-    return axios.all(promises);
-  }
-
   /**
    * See: https://docs.atlassian.com/software/jira/docs/api/REST/8.6.0/#api/2/issue-addWorklog
    * @param issueKey
    * @param workLog
    */
-  addWorkLog (issueKey: string, workLog: JiraWorkLog): any {
+  addWorkLog (entry: TimeEntry): any {
+    const workLog = {
+      comment: entry.description,
+      started: removeColumnFromTimezoneOffset(entry.start.toISO()),
+      timeSpentSeconds: entry.duration.as('seconds')
+    };
+
     return axios({
       method: 'post',
-      url: `${this.basePath}/issue/${issueKey}/worklog`,
+      url: `${this.basePath}/issue/${entry.jiraIssue}/worklog`,
       data: workLog,
       headers: this.createHeaders()
     });

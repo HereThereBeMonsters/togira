@@ -22,11 +22,17 @@ const routes = [
     path: '/config',
     name: 'config',
     component: () => import(/* webpackChunkName: "config" */ '../views/Config.vue')
+  },
+  {
+    path: '/importing',
+    name: 'importing',
+    component: () => import(/* webpackChunkName: "config" */ '../views/Importing.vue')
   }
 ];
 
 const router = new VueRouter({
-  routes
+  routes,
+  linkActiveClass: 'uk-active'
 });
 
 export default router;

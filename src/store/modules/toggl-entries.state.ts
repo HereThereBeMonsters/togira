@@ -38,16 +38,9 @@ const togglEntries = {
         commit('entries', { entries });
         commit('loading', { loading: false });
       });
-    },
+    }
 
-    // @ts-ignore
-    loadJiraIssueTest ({ rootState, dispatch, commit, getters, rootGetters }) {
-      const config = rootState.configuration;
-      const jira = new JiraApiClient(config.jiraTargetHost, config.jiraUsername, config.jiraPassword);
-      jira.getJiraIssue('CADENZA-13381')
-        .then((issue: any) => console.log(issue));
-    },
-
+    /*
     // @ts-ignore
     importSelectedEntries ({ rootState, dispatch, commit, getters, rootGetters }) {
       const config = rootState.configuration;
@@ -58,6 +51,7 @@ const togglEntries = {
 
       jira.addWorkLogs(selectedEntries);
     }
+     */
   }
 };
 
