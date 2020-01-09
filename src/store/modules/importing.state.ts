@@ -23,16 +23,19 @@ const importingState = {
 
   mutations: {
     addImportedEntryResult (state: any, payload: any) {
-      state.importedEntriesResults.push(payload.entry);
+      state.importedEntriesResults.push(payload.result);
     },
     addFailedEntryResult (state: any, payload: any) {
-      state.failedEntriesResults.push(payload.entry);
+      state.failedEntriesResults.push(payload.result);
     },
     resetImportedEntryResults (state: any) {
       state.importedEntriesResults = [];
     },
     resetFailedEntryResults (state: any) {
       state.failedEntriesResults = [];
+    },
+    importing (state: any, payload: any) {
+      state.importing = payload.importing;
     }
   },
 
@@ -45,28 +48,34 @@ const importingState = {
 
       commit('resetImportedEntryResults');
       commit('resetFailedEntryResults');
+      commit('importing', { importing: true });
 
       const promises = selectedEntries
         .map((entry:TimeEntry) => {
           return jira.addWorkLog(entry)
             .then((result: any) => {
               console.log('Imported successfully:', entry);
-              commit('addImportedEntryResult',
-                {
-                  entry,
-                  success: true,
-                  message: 'Imported OK'
-                });
+              commit('addImportedEntryResult', {
+                result:
+                  {
+                    entry,
+                    success: true,
+                    message: 'Imported OK'
+                  }
+              });
             })
             .catch((error: any) => {
               console.log('Import failed:', entry, error);
-              commit('addFailedEntryResult',
-                {
-                  entry,
-                  success: false,
-                  message: error
-                });
-            });
+              commit('addFailedEntryResult', {
+                result:
+                  {
+                    entry,
+                    success: false,
+                    message: error
+                  }
+              });
+            })
+            .finally(() => commit('importing', { importing: false }));
         });
 
       return Promise.all(promises);
