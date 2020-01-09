@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Toggl entries</h2>
+    <h4>TIME LOGS FROM TOGGL</h4>
 
     <div v-if="!entries && !loading">
       <button class="uk-button uk-button-primary" v-on:click="loadEntries">
@@ -8,24 +8,96 @@
       </button>
     </div>
 
-    <div v-if="loading">Loading entries from Toggl...</div>
+    <div v-if="loading">
+      <div uk-spinner></div>
+      <span class="uk-margin-left">
+        Loading entries from Toggl...
+      </span>
+    </div>
 
     <div v-if="entries && !loading">
-      {{selectedEntries.length}} of {{entries.length}} entries selected.
-      <div class="uk-button-group">
-        <button class="uk-button uk-button-default" v-on:click="selectAll()">Select all</button>
-        <button class="uk-button uk-button-default" v-on:click="selectAll(false)">Select none</button>
-        <button class="uk-button uk-button-primary" v-on:click="loadEntries">
-          Refresh
+      <div class="uk-margin-top">
+        <button class="uk-button uk-button-default uk-button-small"
+                v-on:click="loadEntries"
+                title="Refresh">
+          <span uk-icon="icon: refresh"></span>
+        </button>
+        <button class="uk-button uk-button-default uk-button-small"
+                v-on:click="selectAll()"
+                title="Select all">
+          <span uk-icon="icon: check"></span>
+        </button>
+        <button class="uk-button uk-button-default uk-button-small"
+                v-on:click="selectAll(false)"
+                title="Unselect all">
+          <span uk-icon="icon: close"></span>
+        </button>
+        <span class="uk-margin-left">
+          {{selectedEntries.length}} of {{entries.length}} entries selected.
+        </span>
+        <button v-on:click="importSelectedEntries()" class="import-jira-button uk-button uk-button-primary">
+          <span uk-icon="icon: cloud-upload"></span>
+          <span class="uk-margin-left">Import selected entries to Jira</span>
         </button>
       </div>
 
-      <button v-on:click="importSelectedEntries()" class="uk-button uk-button-primary">Import selected entries to Jira</button>
+      <div v-for="day in days" v-bind:key="day" >
+        <div class="day-time-entries uk-margin-medium-top">
+          <div class="day-time-entries--header">
+            <span uk-icon="icon: calendar; ratio: 0.7"></span>
+            <span class="day-time-entries--header--day">{{day}}</span>
+          </div>
+          <time-entry v-for="entry in getEntriesForDay(day)" v-bind:key="entry.id" v-bind:timeEntry="entry"/>
+        </div>
+      </div>
 
-      <time-entry v-for="entry in entries" v-bind:key="entry.id" v-bind:timeEntry="entry"/>
+      <!-- TODO: extract component to avoid repeating? -->
+      <div class="uk-margin-top" v-if="entries.length > 16">
+        <button class="uk-button uk-button-default uk-button-small"
+                v-on:click="loadEntries"
+                title="Refresh">
+          <span uk-icon="icon: refresh"></span>
+        </button>
+        <button class="uk-button uk-button-default uk-button-small"
+                v-on:click="selectAll()"
+                title="Select all">
+          <span uk-icon="icon: check"></span>
+        </button>
+        <button class="uk-button uk-button-default uk-button-small"
+                v-on:click="selectAll(false)"
+                title="Unselect all">
+          <span uk-icon="icon: close"></span>
+        </button>
+        <span class="uk-margin-left">
+          {{selectedEntries.length}} of {{entries.length}} entries selected.
+        </span>
+        <button v-on:click="importSelectedEntries()" class="import-jira-button uk-button uk-button-primary">
+          <span uk-icon="icon: cloud-upload"></span>
+          <span class="uk-margin-left">Import selected entries to Jira</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
+
+<style lang="less">
+  @import "../global.less";
+
+  .import-jira-button {
+    float: right;
+  }
+
+  .day-time-entries {
+    .day-time-entries--header {
+      font-weight: bold;
+      border-bottom: 1px solid @globcol-grey-lighter;
+      padding-left: 9px;
+      .day-time-entries--header--day {
+        margin-left: 6px;
+      }
+    }
+  }
+</style>
 
 <script>
 
@@ -36,6 +108,12 @@ export default {
   computed: {
     entries: function () {
       return this.$store.state.togglEntries.entries;
+    },
+    days: function () {
+      const allDays = this.$store.state.togglEntries.entries
+        .map(entry => entry.day);
+
+      return [...new Set(allDays)];
     },
     selectedEntries: function () {
       return this.$store.state.togglEntries.entries.filter(entry => entry.selected);
@@ -54,6 +132,9 @@ export default {
     importSelectedEntries () {
       this.$store.dispatch('importing/importSelectedEntries');
       this.$router.push('importing');
+    },
+    getEntriesForDay (day) {
+      return this.entries.filter(entry => entry.day === day);
     }
   },
   components: {

@@ -18,7 +18,7 @@
     </nav>
 
     <div class="uk-container">
-      <div class="uk-grid">
+      <div class="uk-grid uk-margin-top">
         <router-view/>
       </div>
     </div>
@@ -27,23 +27,7 @@
 </template>
 
 <style lang="less">
-@import "../node_modules/uikit/src/less/uikit.theme.less";
-
-@global-color: #666;
-@global-emphasis-color: #333;
-@global-muted-color: #999;
-@global-link-color: #C56368;
-@global-link-hover-color: #e2787d;
-
-@global-inverse-color: #D6DD88;
-@global-background: #fff;
-
-@global-muted-background: #D6DD88;
-@global-primary-background: #4060A1;
-@global-secondary-background: #222;
-
-@global-font-family: 'Roboto', sans-serif;
-@global-font-size: 16px;
+@import "global.less";
 
 .banner {
   padding: 10px;

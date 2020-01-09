@@ -22,6 +22,10 @@ export default class TimeEntry {
     [this.description, this.jiraIssue] = extractJiraIssue(this.descriptionRaw);
   }
 
+  toggleSelected () {
+    this.selected = !this.selected;
+  }
+
   get day (): string {
     return this.start.toFormat('dd.MM.yyyy');
   }
