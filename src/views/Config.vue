@@ -20,14 +20,28 @@
 
         <legend class="uk-legend">Toggl</legend>
 
-        <label class="uk-form-label" for="togglApiKey">Toggl API key:</label>
-        <div class="uk-form-controls">
-          <input type="text"
-                 id="togglApiKey"
-                 placeholder="Enter your Toggl API key"
-                 v-model="togglApiKey"
-                 class="uk-input"
-          >
+        <div class="uk-margin-small-top">
+          <label class="uk-form-label" for="togglApiKey">Toggl API key:</label>
+          <div class="uk-form-controls">
+            <input type="text"
+                   id="togglApiKey"
+                   placeholder="Enter your Toggl API key"
+                   v-model="togglApiKey"
+                   class="uk-input"
+            >
+          </div>
+        </div>
+
+        <div class="uk-margin-small-top">
+          <label class="uk-form-label" for="togglImportedLabel">Label to add to imported entries (leave empty in order not to add any):</label>
+          <div class="uk-form-controls">
+            <input type="text"
+                   id="togglImportedLabel"
+                   placeholder=""
+                   v-model="togglImportedLabel"
+                   class="uk-input"
+            >
+          </div>
         </div>
       </fieldset>
 
@@ -88,6 +102,16 @@ export default {
       set: function (value) {
         store.commit('configuration/togglApiKey', {
           togglApiKey: value
+        });
+      }
+    },
+    togglImportedLabel: {
+      get: function () {
+        return store.state.configuration.togglImportedLabel;
+      },
+      set: function (value) {
+        store.commit('configuration/togglImportedLabel', {
+          togglImportedLabel: value
         });
       }
     },

@@ -2,6 +2,7 @@ const CONFIG_STORAGE_KEY = 'toggl-to-jira.config';
 
 const initialState = {
   togglApiKey: '',
+  togglImportedLabel: '',
   jiraTargetHost: '',
   jiraUsername: '',
   jiraPassword: ''
@@ -11,15 +12,15 @@ const configuration = {
   namespaced: true,
   state: initialState,
 
-  getters: {
-    isComplete (state: any) {
-      return !!(state.togglApiKey);
-    }
-  },
+  getters: {},
 
   mutations: {
     togglApiKey (state: any, payload: any) {
       state.togglApiKey = payload.togglApiKey;
+      persistConfig(state);
+    },
+    togglImportedLabel (state: any, payload: any) {
+      state.togglImportedLabel = payload.togglImportedLabel;
       persistConfig(state);
     },
     jiraTargetHost (state: any, payload: any) {
