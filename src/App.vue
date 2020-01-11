@@ -17,11 +17,23 @@
       </div>
     </nav>
 
-    <div class="uk-container">
+    <div class="uk-container page-body">
       <div class="uk-grid uk-margin-top">
         <router-view/>
       </div>
     </div>
+
+    <footer id="app--footer" class="uk-margin-top uk-light uk-background-primary">
+      <div class="uk-container uk-flex uk-flex-between">
+        <div class="uk-text-small uk-flex">
+          Toggira - Copyright &copy; 2020 by Pierre Henry
+        </div>
+        <a href="https://github.com/HereThereBeMonsters/toggl-to-jira/" class="uk-text-small">
+          <span uk-icon="icon: github-alt; ratio: 0.8"></span>
+          Project on github
+        </a>
+      </div>
+    </footer>
   </div>
 
 </template>
@@ -30,11 +42,23 @@
 @import "global.less";
 
 .banner {
-  padding: 10px;
+  padding: 7px;
 
   & img {
-    max-height: 75px;
+    max-height: 30px;
   }
+}
+
+#app {
+  height: 100%;
+}
+
+.page-body {
+  min-height: calc(100% - 187px); // height of banner + navbar + footer = 60 + 80 +  47 = 187
+}
+
+#app--footer {
+  padding: 3px;
 }
 
 </style>
