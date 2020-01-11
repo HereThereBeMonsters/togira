@@ -1,6 +1,6 @@
 <template>
   <div class="uk-display-block">
-    <h2>Configuration</h2>
+    <h4>CONFIGURATION</h4>
 
     <div class="uk-alert uk-alert-warning uk-flex">
       <div class="uk-padding-small">

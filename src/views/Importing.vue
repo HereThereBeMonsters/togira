@@ -36,8 +36,12 @@
             </li>
           </ul>
         </div>
-
       </div>
+
+      <button class="uk-button uk-button-primary" v-on:click="goToEntries()">
+        <span uk-icon="icon: arrow-left"></span>
+        Back to Toggl entries
+      </button>
     </div>
 
   </div>
@@ -88,7 +92,12 @@ export default {
       return (this.totalDone / this.selectedEntries.length) * 100;
     }
   },
-  methods: {},
+  methods: {
+    goToEntries () {
+      this.$store.dispatch('togglEntries/loadEntries');
+      this.$router.push('toggl-entries');
+    }
+  },
   components: {}
 };
 </script>
