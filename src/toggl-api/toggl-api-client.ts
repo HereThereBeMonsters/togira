@@ -10,6 +10,16 @@ export class ToggleApiClient {
     this.apiToken = apiToken;
   }
 
+  getWorkspaces (): Promise<Array<TogglWorkspace>> {
+    return axios.get(`${this.baseUrl}/workspaces`, this.getConfig())
+      .then(response => response.data);
+  }
+
+  getWorkspaceTags (workspaceId: string): Promise<Array<TogglTag>> {
+    return axios.get(`${this.baseUrl}/workspaces/${workspaceId}/tags`, this.getConfig())
+      .then(response => response.data);
+  }
+
   getEntries (): Promise<Array<TimeEntry>> {
     return axios.get(`${this.baseUrl}/time_entries`, this.getConfig())
       .then(response => response.data.map((rawEntry: TogglTimeEntry) => new TimeEntry(rawEntry)));
@@ -34,4 +44,14 @@ export interface TogglTimeEntry {
   description: string;
   duronly: boolean;
   at: Date;
+}
+
+export interface TogglTag {
+  id: number,
+  name: string
+}
+
+export interface TogglWorkspace {
+  id: number,
+  name: string
 }

@@ -1,13 +1,19 @@
+import { ToggleApiClient } from '@/toggl-api/toggl-api-client';
+
 const CONFIG_STORAGE_KEY = 'toggl-to-jira.config';
 
 const initialState = {
   togglApiKey: '',
-  togglImportedLabel: '',
+  togglWorkspaces: [],
+  togglWorkspaceId: '',
+  togglTags: [],
+  togglImportedTagId: '',
   jiraTargetHost: '',
   jiraUsername: '',
   jiraPassword: ''
 };
 
+// @ts-ignore
 const configuration = {
   namespaced: true,
   state: initialState,
@@ -19,8 +25,20 @@ const configuration = {
       state.togglApiKey = payload.togglApiKey;
       persistConfig(state);
     },
-    togglImportedLabel (state: any, payload: any) {
-      state.togglImportedLabel = payload.togglImportedLabel;
+    togglWorkspaces (state: any, payload: any) {
+      state.togglWorkspaces = payload.togglWorkspaces;
+      persistConfig(state);
+    },
+    togglWorkspaceId (state: any, payload: any) {
+      state.togglWorkspaceId = payload.togglWorkspaceId;
+      persistConfig(state);
+    },
+    togglTags (state: any, payload: any) {
+      state.togglTags = payload.togglTags;
+      persistConfig(state);
+    },
+    togglImportedTagId (state: any, payload: any) {
+      state.togglImportedTagId = payload.togglImportedTagId;
       persistConfig(state);
     },
     jiraTargetHost (state: any, payload: any) {
@@ -40,6 +58,41 @@ const configuration = {
   actions: {
     restore ({ commit }: any) {
       restoreConfig(commit);
+    },
+    // @ts-ignore
+    setTogglApiKey ({ commit, state, dispatch }, { togglApiKey }) {
+      commit('togglApiKey', {
+        togglApiKey
+      });
+
+      new ToggleApiClient(togglApiKey)
+        .getWorkspaces()
+        .then(workspaces => {
+          commit('togglWorkspaces', { togglWorkspaces: workspaces });
+          const togglWorkspaceId = workspaces.length > 0 ? workspaces[0].id : null;
+          dispatch('setTogglWorkspaceId', { togglWorkspaceId });
+        })
+        .catch(error => {
+          alert(`Error loading workspaces. Toggl API key is probably invalid: ${error}`);
+          commit('togglWorkspaces', { togglWorkspaces: [] });
+          dispatch('setTogglWorkspaceId', { togglWorkspaceId: null });
+        });
+    },
+    // @ts-ignore
+    setTogglWorkspaceId ({ commit, state }, { togglWorkspaceId }) {
+      commit('togglWorkspaceId', {
+        togglWorkspaceId
+      });
+
+      if (togglWorkspaceId) {
+        new ToggleApiClient(state.togglApiKey)
+          .getWorkspaceTags(togglWorkspaceId)
+          .then(togglTags => {
+            commit('togglTags', { togglTags });
+          });
+      } else {
+        commit('togglTags', { togglTags: [] });
+      }
     }
   }
 };

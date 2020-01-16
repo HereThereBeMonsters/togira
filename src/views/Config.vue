@@ -18,7 +18,7 @@
     <form class="uk-form-stacked">
       <fieldset class="uk-fieldset">
 
-        <legend class="uk-legend">Toggl</legend>
+        <legend class="uk-legend">Toggl settings</legend>
 
         <div class="uk-margin-small-top">
           <label class="uk-form-label" for="togglApiKey">Toggl API key:</label>
@@ -33,21 +33,28 @@
         </div>
 
         <div class="uk-margin-small-top">
-          <label class="uk-form-label" for="togglImportedLabel">Label to add to imported entries (leave empty in order not to add any):</label>
+          <label class="uk-form-label" for="togglWorkspaceId">Toggl workspace:</label>
           <div class="uk-form-controls">
-            <input type="text"
-                   id="togglImportedLabel"
-                   placeholder=""
-                   v-model="togglImportedLabel"
-                   class="uk-input"
-            >
+            <select id="togglWorkspaceId" v-model="togglWorkspaceId" class="uk-select">
+              <option v-for="workspace of togglWorkspaces" v-bind:key="workspace.id" v-bind:value="workspace.id">{{workspace.name}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="uk-margin-small-top">
+          <label class="uk-form-label" for="togglImportedTagId">Label to add to imported entries (must be created in Toggl first):</label>
+          <div class="uk-form-controls">
+            <select id="togglImportedTagId" v-model="togglImportedTagId" class="uk-select">
+              <option value="">Do not use tag</option>
+              <option v-for="tag of togglTags" v-bind:key="tag.id" v-bind:value="tag.id">{{tag.name}}</option>
+            </select>
           </div>
         </div>
       </fieldset>
 
       <fieldset class="uk-fieldset uk-margin-top">
 
-        <legend class="uk-legend">Jira</legend>
+        <legend class="uk-legend">Jira settings</legend>
 
         <div class="uk-margin-small-top">
           <label class="uk-form-label" for="jiraTargetHost">Target server:</label>
@@ -92,26 +99,41 @@ export default {
   name: 'config',
   components: {},
   computed: {
-    isConfigComplete: function () {
-      return store.getters['configuration/isComplete'];
-    },
     togglApiKey: {
       get: function () {
         return store.state.configuration.togglApiKey;
       },
       set: function (value) {
-        store.commit('configuration/togglApiKey', {
-          togglApiKey: value
+        store.dispatch('configuration/setTogglApiKey', { togglApiKey: value });
+      }
+    },
+    togglWorkspaces: {
+      get: function () {
+        return store.state.configuration.togglWorkspaces;
+      }
+    },
+    togglWorkspaceId: {
+      get: function () {
+        return store.state.configuration.togglWorkspaceId;
+      },
+      set: function (value) {
+        store.dispatch('configuration/setTogglWorkspaceId', {
+          togglWorkspaceId: value
         });
       }
     },
-    togglImportedLabel: {
+    togglTags: {
       get: function () {
-        return store.state.configuration.togglImportedLabel;
+        return store.state.configuration.togglTags;
+      }
+    },
+    togglImportedTagId: {
+      get: function () {
+        return store.state.configuration.togglImportedTagId;
       },
       set: function (value) {
-        store.commit('configuration/togglImportedLabel', {
-          togglImportedLabel: value
+        store.commit('configuration/togglImportedTagId', {
+          togglImportedTagId: value
         });
       }
     },
