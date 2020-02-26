@@ -1,5 +1,6 @@
 import TimeEntry from '@/toggl-api/time-entry';
 import JiraApiClient from '@/jira-api/jira-api-client';
+import { ToggleApiClient } from '@/toggl-api/toggl-api-client';
 
 const initialState = {
   importedEntriesResults: [],
@@ -44,6 +45,7 @@ const importingState = {
     importSelectedEntries ({ rootState, dispatch, commit, getters, rootGetters }) {
       const config = rootState.configuration;
       const jira = new JiraApiClient(config.jiraTargetHost, config.jiraUsername, config.jiraPassword);
+      const toggl = new ToggleApiClient(config.togglApiKey);
       const selectedEntries = rootGetters['togglEntries/selectedEntries'];
 
       commit('resetImportedEntryResults');
@@ -52,9 +54,17 @@ const importingState = {
 
       const promises = selectedEntries
         .map((entry:TimeEntry) => {
+          console.log('Importing time entry to Jira:', entry);
+
           return jira.addWorkLog(entry)
             .then((result: any) => {
-              console.log('Imported successfully:', entry);
+              if (config.togglImportedTag) {
+                console.log('imported to Jira successfully, now adding imported tag in Toggl');
+                toggl.addTagToEntry(entry, config.togglImportedTag);
+              }
+            })
+            .then((result: any) => {
+              console.log('Entry imported successfully.');
               commit('addImportedEntryResult', {
                 result:
                   {

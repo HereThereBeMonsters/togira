@@ -25,6 +25,21 @@ export class ToggleApiClient {
       .then(response => response.data.map((rawEntry: TogglTimeEntry) => new TimeEntry(rawEntry)));
   }
 
+  addTagToEntry (entry: TimeEntry, tag: TogglTag) : Promise<TimeEntry> {
+    return axios.put(
+      `${this.baseUrl}/time_entries/${entry.id}`,
+      {
+        time_entry: {
+          id: entry.id,
+          tags: [tag.name],
+          tag_action: 'add'
+        }
+      },
+      this.getConfig()
+    )
+      .then(response => new TimeEntry(response.data.data));
+  }
+
   getConfig () {
     return {
       auth: { username: this.apiToken, password: 'api_token' }
@@ -34,9 +49,9 @@ export class ToggleApiClient {
 
 export interface TogglTimeEntry {
   id: number;
-  uid: number;
-  wid: number;
-  guid: string;
+  uid: number | null;
+  wid: number | null;
+  guid: string | null;
   billable: boolean;
   start: string;
   stop: string;

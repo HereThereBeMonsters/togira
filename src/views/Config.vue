@@ -42,11 +42,11 @@
         </div>
 
         <div class="uk-margin-small-top">
-          <label class="uk-form-label" for="togglImportedTagId">Label to add to imported entries (must be created in Toggl first):</label>
+          <label class="uk-form-label" for="togglImportedTagSelect">Label to add to imported entries (must be created in Toggl first):</label>
           <div class="uk-form-controls">
-            <select id="togglImportedTagId" v-model="togglImportedTagId" class="uk-select">
-              <option value="">Do not use tag</option>
-              <option v-for="tag of togglTags" v-bind:key="tag.id" v-bind:value="tag.id">{{tag.name}}</option>
+            <select id="togglImportedTagSelect" v-model="togglImportedTag" class="uk-select">
+              <option v-bind:value="null">Do not use tag</option>
+              <option v-for="tag of togglTags" v-bind:key="tag.id" v-bind:value="tag">{{tag.name}}</option>
             </select>
           </div>
         </div>
@@ -127,13 +127,13 @@ export default {
         return store.state.configuration.togglTags;
       }
     },
-    togglImportedTagId: {
+    togglImportedTag: {
       get: function () {
-        return store.state.configuration.togglImportedTagId;
+        return store.state.configuration.togglImportedTag;
       },
       set: function (value) {
-        store.commit('configuration/togglImportedTagId', {
-          togglImportedTagId: value
+        store.commit('configuration/togglImportedTag', {
+          togglImportedTag: value
         });
       }
     },

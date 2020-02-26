@@ -7,7 +7,7 @@ const initialState = {
   togglWorkspaces: [],
   togglWorkspaceId: '',
   togglTags: [],
-  togglImportedTagId: '',
+  togglImportedTag: null,
   jiraTargetHost: '',
   jiraUsername: '',
   jiraPassword: ''
@@ -37,8 +37,8 @@ const configuration = {
       state.togglTags = payload.togglTags;
       persistConfig(state);
     },
-    togglImportedTagId (state: any, payload: any) {
-      state.togglImportedTagId = payload.togglImportedTagId;
+    togglImportedTag (state: any, payload: any) {
+      state.togglImportedTag = payload.togglImportedTag;
       persistConfig(state);
     },
     jiraTargetHost (state: any, payload: any) {
