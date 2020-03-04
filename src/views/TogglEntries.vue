@@ -127,7 +127,11 @@ export default {
       this.$store.dispatch('togglEntries/loadEntries');
     },
     selectAll: function (value = true) {
-      this.entries.forEach(entry => (entry.selected = value));
+      this.entries.forEach(entry => {
+        if (entry.selectable) {
+          entry.selected = value;
+        }
+      });
     },
     importSelectedEntries () {
       this.$store.dispatch('importing/importSelectedEntries');

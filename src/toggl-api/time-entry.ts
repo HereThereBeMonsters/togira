@@ -26,7 +26,9 @@ export default class TimeEntry {
   }
 
   toggleSelected () {
-    this.selected = !this.selected;
+    if (this.selectable) {
+      this.selected = !this.selected;
+    }
   }
 
   get day (): string {
@@ -38,11 +40,19 @@ export default class TimeEntry {
   }
 
   get endTime (): string {
-    return this.stop.toLocaleString(DateTime.TIME_24_SIMPLE);
+    return this.status === TimeEntryStatus.Ongoing
+      ? '...'
+      : this.stop.toLocaleString(DateTime.TIME_24_SIMPLE);
   }
 
   get durationFormatted (): string {
-    return this.duration.toFormat('h:mm');
+    return this.status === TimeEntryStatus.Ongoing
+      ? '...'
+      : this.duration.toFormat('h:mm');
+  }
+
+  get selectable (): boolean {
+    return this.status === TimeEntryStatus.Incoming;
   }
 }
 

@@ -1,5 +1,6 @@
 import { ToggleApiClient } from '@/toggl-api/toggl-api-client';
 import TimeEntry from '@/toggl-api/time-entry';
+import { TimeEntryStatus } from '@/toggl-api/time-entry-status';
 
 const initialState = {
   entries: null,
@@ -12,7 +13,15 @@ const togglEntries = {
 
   getters: {
     selectedEntries: (state: any) => {
-      return state.entries.filter((entry:TimeEntry) => entry.selected);
+      return state.entries.filter((entry: TimeEntry) => entry.selected);
+    },
+
+    ongoingEntry: (state: any) => {
+      const ongoingEntries = state.entries.filter((entry: TimeEntry) => entry.status === TimeEntryStatus.Ongoing);
+      if (ongoingEntries.length > 0) {
+        return ongoingEntries[0];
+      }
+      return null;
     }
   },
 
