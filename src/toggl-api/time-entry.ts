@@ -13,7 +13,7 @@ export default class TimeEntry {
   description: string;
   jiraIssue: string | null;
   selected: boolean = false;
-  mergedFrom: number | null;
+  mergedFrom: Array<number> | null;
 
   static fromRawToggleEntry (raw: TogglTimeEntry, importedTagName: string): TimeEntry {
     const [description, jiraIssue] = extractJiraIssue(raw.description);
@@ -40,7 +40,7 @@ export default class TimeEntry {
     description: string,
     jiraIssue: string | null,
     status: TimeEntryStatus,
-    mergedFrom: number | null = null) {
+    mergedFrom: Array<number> | null = null) {
     this.id = id;
     this.billable = billable;
     this.start = start;

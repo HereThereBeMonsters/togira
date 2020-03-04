@@ -11,9 +11,9 @@
     </div>
     <div class="time-entry--merged-count">
       <span v-if="timeEntry.mergedFrom"
-            v-bind:title="`Merged from ${timeEntry.mergedFrom} similar entries`"
+            v-bind:title="`Merged from ${timeEntry.mergedFrom.length} similar entries`"
             class="uk-badge uk-text-bold"
-      >{{timeEntry.mergedFrom}}</span>
+      >{{timeEntry.mergedFrom.length}}</span>
     </div>
     <div class="time-entry--jira-key">
       <a v-bind:href="jiraIssueUrl" target="_blank" class="time-entry--jira-key--link">

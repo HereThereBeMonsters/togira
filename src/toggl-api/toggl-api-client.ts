@@ -33,11 +33,13 @@ export class ToggleApiClient {
   }
 
   addTagToEntry (entry: TimeEntry, tag: TogglTag) : Promise<TimeEntry> {
+    // the tag must be added to all merged entries in Toggl
+    const idsParam = entry.mergedFrom ? entry.mergedFrom.join(',') : entry.id;
+
     return axios.put(
-      `${this.baseUrl}/time_entries/${entry.id}`,
+      `${this.baseUrl}/time_entries/${idsParam}`,
       {
         time_entry: {
-          id: entry.id,
           tags: [tag.name],
           tag_action: 'add'
         }
@@ -106,6 +108,7 @@ function mergeEntriesWithSameDayDescriptionStatus (entries: Array<TimeEntry>): A
 }
 
 function mergeEntries (entries: Array<TimeEntry>) {
+  const ids = entries.map(entry => entry.id);
   const totalDuration = entries.reduce((previous: Duration, entry: TimeEntry) => previous.plus(entry.duration), Duration.fromMillis(0));
   const first = entries[0];
   const last = entries[entries.length - 1];
@@ -119,6 +122,6 @@ function mergeEntries (entries: Array<TimeEntry>) {
     first.description,
     first.jiraIssue,
     first.status,
-    entries.length
+    ids
   );
 }
