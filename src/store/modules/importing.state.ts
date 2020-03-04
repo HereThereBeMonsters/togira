@@ -84,11 +84,11 @@ const importingState = {
                     message: error
                   }
               });
-            })
-            .finally(() => commit('importing', { importing: false }));
+            });
         });
 
-      return Promise.all(promises);
+      return Promise.all(promises)
+        .finally(() => commit('importing', { importing: false }));
     }
   }
 };
