@@ -1,5 +1,7 @@
 import axios from 'axios';
+import groupBy from 'lodash';
 import TimeEntry from '@/toggl-api/time-entry';
+import { Duration } from 'luxon';
 
 export class ToggleApiClient {
   apiToken: string;
@@ -24,7 +26,10 @@ export class ToggleApiClient {
 
   getEntries (): Promise<Array<TimeEntry>> {
     return axios.get(`${this.baseUrl}/time_entries`, this.getConfig())
-      .then(response => response.data.map((rawEntry: TogglTimeEntry) => new TimeEntry(rawEntry, this.importedTagName)));
+      .then(response => {
+        const entries: Array<TimeEntry> = response.data.map((rawEntry: TogglTimeEntry) => TimeEntry.fromRawToggleEntry(rawEntry, this.importedTagName));
+        return mergeEntriesWithSameDayDescriptionStatus(entries);
+      });
   }
 
   addTagToEntry (entry: TimeEntry, tag: TogglTag) : Promise<TimeEntry> {
@@ -39,7 +44,7 @@ export class ToggleApiClient {
       },
       this.getConfig()
     )
-      .then(response => new TimeEntry(response.data.data, this.importedTagName));
+      .then(response => TimeEntry.fromRawToggleEntry(response.data.data, this.importedTagName));
   }
 
   getConfig () {
@@ -72,4 +77,48 @@ export interface TogglTag {
 export interface TogglWorkspace {
   id: number,
   name: string
+}
+
+function mergeEntriesWithSameDayDescriptionStatus (entries: Array<TimeEntry>): Array<TimeEntry> {
+  // group entries by day, description and status fields
+  const entriesMap: { [key: string]: Array<TimeEntry> } = entries
+    .reduce(
+      (map: any, entry) => {
+        const key = `${entry.day}:${entry.descriptionRaw}:${entry.status}`;
+        const mapEntry = map[key];
+        if (typeof mapEntry === 'undefined') {
+          map[key] = [entry];
+        } else {
+          mapEntry.push(entry);
+        }
+        return map;
+      },
+      {}
+    );
+
+  return Object.values(entriesMap)
+    .map((group: Array<TimeEntry>) => {
+      if (group.length === 1) {
+        return group[0];
+      }
+      return mergeEntries(group);
+    });
+}
+
+function mergeEntries (entries: Array<TimeEntry>) {
+  const totalDuration = entries.reduce((previous: Duration, entry: TimeEntry) => previous.plus(entry.duration), Duration.fromMillis(0));
+  const first = entries[0];
+  const last = entries[entries.length - 1];
+  return new TimeEntry(
+    first.id,
+    first.billable,
+    first.start,
+    last.stop,
+    totalDuration,
+    first.descriptionRaw,
+    first.description,
+    first.jiraIssue,
+    first.status,
+    entries.length
+  );
 }

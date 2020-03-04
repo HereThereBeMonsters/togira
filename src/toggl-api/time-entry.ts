@@ -13,16 +13,44 @@ export default class TimeEntry {
   description: string;
   jiraIssue: string | null;
   selected: boolean = false;
+  mergedFrom: number | null;
 
-  constructor (raw: TogglTimeEntry, importedTagName: string) {
-    this.id = raw.id;
-    this.billable = raw.billable;
-    this.start = DateTime.fromISO(raw.start);
-    this.stop = DateTime.fromISO(raw.stop);
-    this.duration = Duration.fromMillis(raw.duration * 1000);
-    this.descriptionRaw = raw.description;
-    [this.description, this.jiraIssue] = extractJiraIssue(this.descriptionRaw);
-    this.status = determineStatus(raw, this.jiraIssue, importedTagName);
+  static fromRawToggleEntry (raw: TogglTimeEntry, importedTagName: string): TimeEntry {
+    const [description, jiraIssue] = extractJiraIssue(raw.description);
+    return new TimeEntry(
+      raw.id,
+      raw.billable,
+      DateTime.fromISO(raw.start),
+      DateTime.fromISO(raw.stop),
+      Duration.fromMillis(raw.duration * 1000),
+      raw.description,
+      description,
+      jiraIssue,
+      determineStatus(raw, jiraIssue, importedTagName)
+    );
+  }
+
+  constructor (
+    id: number,
+    billable: boolean,
+    start: DateTime,
+    stop: DateTime,
+    duration: Duration,
+    descriptionRaw: string,
+    description: string,
+    jiraIssue: string | null,
+    status: TimeEntryStatus,
+    mergedFrom: number | null = null) {
+    this.id = id;
+    this.billable = billable;
+    this.start = start;
+    this.stop = stop;
+    this.duration = duration;
+    this.descriptionRaw = descriptionRaw;
+    this.description = description;
+    this.jiraIssue = jiraIssue;
+    this.status = status;
+    this.mergedFrom = mergedFrom;
   }
 
   toggleSelected () {

@@ -14,14 +14,6 @@ const togglEntries = {
   getters: {
     selectedEntries: (state: any) => {
       return state.entries.filter((entry: TimeEntry) => entry.selected);
-    },
-
-    ongoingEntry: (state: any) => {
-      const ongoingEntries = state.entries.filter((entry: TimeEntry) => entry.status === TimeEntryStatus.Ongoing);
-      if (ongoingEntries.length > 0) {
-        return ongoingEntries[0];
-      }
-      return null;
     }
   },
 

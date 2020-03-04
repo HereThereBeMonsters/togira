@@ -9,6 +9,12 @@
       <span v-if="timeEntry.status === 2" uk-icon="icon: check; ratio: 0.9" title="Imported to Jira"></span>
       <span v-if="timeEntry.status === 3" uk-icon="icon: warning; ratio: 0.9" title="Invalid"></span>
     </div>
+    <div class="time-entry--merged-count">
+      <span v-if="timeEntry.mergedFrom"
+            v-bind:title="`Merged from ${timeEntry.mergedFrom} similar entries`"
+            class="uk-badge uk-text-bold"
+      >{{timeEntry.mergedFrom}}</span>
+    </div>
     <div class="time-entry--jira-key">
       <a v-bind:href="jiraIssueUrl" target="_blank" class="time-entry--jira-key--link">
         {{timeEntry.jiraIssue}}
@@ -86,6 +92,14 @@ export default class TimeEntryComponent extends Vue {
 .time-entry--status {
   width: 25px;
   flex-shrink: 0;
+}
+
+.time-entry--merged-count{
+  width: 30px;
+  flex-shrink: 0;
+  & .uk-badge {
+    font-size: 0.8em;
+  }
 }
 
 .time-entry--jira-key {
