@@ -1,9 +1,11 @@
 import { DateTime, Duration } from 'luxon';
 import { TogglTimeEntry } from './toggl-api-client';
+import { determineStatus, TimeEntryStatus } from '@/toggl-api/time-entry-status';
 
 export default class TimeEntry {
   id: number;
   billable: boolean;
+  status: TimeEntryStatus;
   start: DateTime;
   stop: DateTime;
   duration: Duration;
@@ -12,9 +14,10 @@ export default class TimeEntry {
   jiraIssue: string | null;
   selected: boolean = false;
 
-  constructor (raw: TogglTimeEntry) {
+  constructor (raw: TogglTimeEntry, importedTagName: string) {
     this.id = raw.id;
     this.billable = raw.billable;
+    this.status = determineStatus(raw, importedTagName);
     this.start = DateTime.fromISO(raw.start);
     this.stop = DateTime.fromISO(raw.stop);
     this.duration = Duration.fromMillis(raw.duration * 1000);

@@ -45,7 +45,7 @@ const importingState = {
     importSelectedEntries ({ rootState, dispatch, commit, getters, rootGetters }) {
       const config = rootState.configuration;
       const jira = new JiraApiClient(config.jiraTargetHost, config.jiraUsername, config.jiraPassword);
-      const toggl = new ToggleApiClient(config.togglApiKey);
+      const toggl = new ToggleApiClient(config.togglApiKey, rootGetters['configuration/togglImportedTagName']);
       const selectedEntries = rootGetters['togglEntries/selectedEntries'];
 
       commit('resetImportedEntryResults');

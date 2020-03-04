@@ -3,11 +3,13 @@ import TimeEntry from '@/toggl-api/time-entry';
 
 export class ToggleApiClient {
   apiToken: string;
+  importedTagName: string;
 
   baseUrl = '/api/toggl';
 
-  constructor (apiToken: string) {
+  constructor (apiToken: string, importedTagName: string) {
     this.apiToken = apiToken;
+    this.importedTagName = importedTagName;
   }
 
   getWorkspaces (): Promise<Array<TogglWorkspace>> {
@@ -22,7 +24,7 @@ export class ToggleApiClient {
 
   getEntries (): Promise<Array<TimeEntry>> {
     return axios.get(`${this.baseUrl}/time_entries`, this.getConfig())
-      .then(response => response.data.map((rawEntry: TogglTimeEntry) => new TimeEntry(rawEntry)));
+      .then(response => response.data.map((rawEntry: TogglTimeEntry) => new TimeEntry(rawEntry, this.importedTagName)));
   }
 
   addTagToEntry (entry: TimeEntry, tag: TogglTag) : Promise<TimeEntry> {
@@ -37,7 +39,7 @@ export class ToggleApiClient {
       },
       this.getConfig()
     )
-      .then(response => new TimeEntry(response.data.data));
+      .then(response => new TimeEntry(response.data.data, this.importedTagName));
   }
 
   getConfig () {
@@ -59,6 +61,7 @@ export interface TogglTimeEntry {
   description: string;
   duronly: boolean;
   at: Date;
+  tags: Array<String>;
 }
 
 export interface TogglTag {

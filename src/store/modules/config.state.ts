@@ -18,7 +18,11 @@ const configuration = {
   namespaced: true,
   state: initialState,
 
-  getters: {},
+  getters: {
+    togglImportedTagName (state: any) {
+      return state.togglImportedTag ? state.togglImportedTag.name : null;
+    }
+  },
 
   mutations: {
     togglApiKey (state: any, payload: any) {
@@ -60,12 +64,12 @@ const configuration = {
       restoreConfig(commit);
     },
     // @ts-ignore
-    setTogglApiKey ({ commit, state, dispatch }, { togglApiKey }) {
+    setTogglApiKey ({ commit, state, dispatch, rootGetters }, { togglApiKey }) {
       commit('togglApiKey', {
         togglApiKey
       });
 
-      new ToggleApiClient(togglApiKey)
+      new ToggleApiClient(togglApiKey, rootGetters['configuration/togglImportedTagName'])
         .getWorkspaces()
         .then(workspaces => {
           commit('togglWorkspaces', { togglWorkspaces: workspaces });
@@ -79,13 +83,13 @@ const configuration = {
         });
     },
     // @ts-ignore
-    setTogglWorkspaceId ({ commit, state }, { togglWorkspaceId }) {
+    setTogglWorkspaceId ({ commit, state, rootGetters }, { togglWorkspaceId }) {
       commit('togglWorkspaceId', {
         togglWorkspaceId
       });
 
       if (togglWorkspaceId) {
-        new ToggleApiClient(state.togglApiKey)
+        new ToggleApiClient(state.togglApiKey, rootGetters['configuration/togglImportedTagName'])
           .getWorkspaceTags(togglWorkspaceId)
           .then(togglTags => {
             commit('togglTags', { togglTags });
