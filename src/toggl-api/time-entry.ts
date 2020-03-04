@@ -22,7 +22,7 @@ export default class TimeEntry {
       raw.billable,
       DateTime.fromISO(raw.start),
       DateTime.fromISO(raw.stop),
-      Duration.fromMillis(raw.duration * 1000),
+      roundToNearestMinute(Duration.fromMillis(raw.duration * 1000)),
       raw.description,
       description,
       jiraIssue,
@@ -85,6 +85,9 @@ export default class TimeEntry {
 }
 
 function extractJiraIssue (descriptionRaw: string): [string, string | null] {
+  if (!descriptionRaw) {
+    return ['', null];
+  }
   const descriptionTrimmed = descriptionRaw.trim();
   const matches = descriptionTrimmed.match(/[A-Z]+-[1-9][0-9]*/);
   if (matches && descriptionTrimmed.startsWith(matches[0])) {
@@ -110,4 +113,21 @@ function cleanUpLeadingGarbage (description: string): string {
 
 function capitalize (text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+/**
+ * Event though the Jira API for work logs accepts durations in seconds, values are then rounded to
+ * minutes by omitting the extra seconds: "1h 12m 53s" will be saved as just "1h 12m".
+ * So, for fairness (those lost seconds add up!), we round the duration to the nearest minute here:
+ * "12m 29s" -> "12m", and "12m 30s" -> "13m".
+ * Issues with duration = 0 will then be marked as invalid.
+ * @param duration
+ */
+function roundToNearestMinute (duration: Duration) {
+  duration = duration.shiftTo('hours', 'minutes', 'seconds');
+  if (duration.seconds < 30) {
+    return duration.set({ seconds: 0 });
+  } else {
+    return duration.set({ minutes: duration.minutes + 1, seconds: 0 });
+  }
 }
