@@ -17,12 +17,12 @@ export default class TimeEntry {
   constructor (raw: TogglTimeEntry, importedTagName: string) {
     this.id = raw.id;
     this.billable = raw.billable;
-    this.status = determineStatus(raw, importedTagName);
     this.start = DateTime.fromISO(raw.start);
     this.stop = DateTime.fromISO(raw.stop);
     this.duration = Duration.fromMillis(raw.duration * 1000);
     this.descriptionRaw = raw.description;
     [this.description, this.jiraIssue] = extractJiraIssue(this.descriptionRaw);
+    this.status = determineStatus(raw, this.jiraIssue, importedTagName);
   }
 
   toggleSelected () {

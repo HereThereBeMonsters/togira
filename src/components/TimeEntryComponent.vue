@@ -1,12 +1,13 @@
 <template>
   <div class="time-entry"
-       v-bind:class="{selected: timeEntry.selected, ongoing: timeEntry.status === 0, incoming: timeEntry.status === 1, imported: timeEntry.status === 2}"
+       v-bind:class="{selected: timeEntry.selected, unselectable: !timeEntry.selectable}"
        v-on:click="onClick"
   >
     <div class="time-entry--status">
-      <span v-if="timeEntry.status === 0" uk-icon="icon: clock; ratio: 0.7" title="Ongoing"></span>
-      <span v-if="timeEntry.status === 1" uk-icon="icon: cloud-download; ratio: 0.7" title="Incoming"></span>
-      <span v-if="timeEntry.status === 2" uk-icon="icon: check; ratio: 0.7" title="Imported to Jira"></span>
+      <span v-if="timeEntry.status === 0" uk-icon="icon: clock; ratio: 0.9" title="Ongoing"></span>
+      <span v-if="timeEntry.status === 1" uk-icon="icon: cloud-download; ratio: 0.9" title="Incoming"></span>
+      <span v-if="timeEntry.status === 2" uk-icon="icon: check; ratio: 0.9" title="Imported to Jira"></span>
+      <span v-if="timeEntry.status === 3" uk-icon="icon: warning; ratio: 0.9" title="Invalid"></span>
     </div>
     <div class="time-entry--jira-key">
       <a v-bind:href="jiraIssueUrl" target="_blank" class="time-entry--jira-key--link">
@@ -29,7 +30,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import TimeEntry from '@/toggl-api/time-entry';
-import { TimeEntryStatus } from '@/toggl-api/time-entry-status';
 
 @Component
 export default class TimeEntryComponent extends Vue {
@@ -67,7 +67,7 @@ export default class TimeEntryComponent extends Vue {
     background-color: @globcol-green-lightest;
   }
 
-  &.imported, &.ongoing {
+  &.unselectable {
     color: @globcol-grey-light;
     cursor: default;
     &:hover {
@@ -84,7 +84,7 @@ export default class TimeEntryComponent extends Vue {
 }
 
 .time-entry--status {
-  width: 20px;
+  width: 25px;
   flex-shrink: 0;
 }
 
