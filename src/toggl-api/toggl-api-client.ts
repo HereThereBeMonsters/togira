@@ -1,5 +1,4 @@
 import axios from 'axios';
-import groupBy from 'lodash';
 import TimeEntry from '@/toggl-api/time-entry';
 import { Duration } from 'luxon';
 

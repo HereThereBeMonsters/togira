@@ -17,16 +17,18 @@ export default class TimeEntry {
 
   static fromRawToggleEntry (raw: TogglTimeEntry, importedTagName: string): TimeEntry {
     const [description, jiraIssue] = extractJiraIssue(raw.description);
+    const duration = roundToNearestMinute(Duration.fromMillis(raw.duration * 1000));
+
     return new TimeEntry(
       raw.id,
       raw.billable,
       DateTime.fromISO(raw.start),
       DateTime.fromISO(raw.stop),
-      roundToNearestMinute(Duration.fromMillis(raw.duration * 1000)),
+      duration,
       raw.description,
       description,
       jiraIssue,
-      determineStatus(raw, jiraIssue, importedTagName)
+      determineStatus(raw, jiraIssue, importedTagName, duration)
     );
   }
 

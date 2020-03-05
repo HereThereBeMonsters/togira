@@ -1,4 +1,5 @@
 import { TogglTimeEntry } from '@/toggl-api/toggl-api-client';
+import { Duration } from 'luxon';
 
 export enum TimeEntryStatus {
   Ongoing,
@@ -7,12 +8,18 @@ export enum TimeEntryStatus {
   Invalid
 }
 
-export function determineStatus (raw: TogglTimeEntry, jiraIssueId: String | null, importedTagName: String): TimeEntryStatus {
+export function determineStatus (
+  raw: TogglTimeEntry,
+  jiraIssueId: String | null,
+  importedTagName: String,
+  duration: Duration): TimeEntryStatus {
   if (!raw.stop) {
     return TimeEntryStatus.Ongoing;
   }
 
-  if (!jiraIssueId) {
+  const durationLessThanOneMinute = duration.shiftTo('minutes').get('minutes') === 0;
+
+  if (!jiraIssueId || durationLessThanOneMinute) {
     return TimeEntryStatus.Invalid;
   }
 
