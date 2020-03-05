@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <div class="uk-background-primary uk-light uk-padding-small banner">
-      <img src="./assets/logo_text_big.png" alt="Magnificent Toggira Logo - End The Pain!">
+    <div class="uk-background-primary uk-light uk-padding-small uk-text-large banner">
+      <img src="./assets/logo_notext_big.png" alt="Magnificent Togira Logo - End The Pain!">
+      Togira
     </div>
 
     <nav uk-navbar class="uk-navbar-container">
@@ -26,7 +27,7 @@
     <footer id="app--footer" class="uk-margin-top uk-light uk-background-primary">
       <div class="uk-container uk-flex uk-flex-between">
         <div class="uk-text-small uk-flex">
-          Toggira - Copyright &copy; 2020 by Pierre Henry
+          Togira - Copyright &copy; 2020 by Pierre Henry
         </div>
         <a href="https://github.com/HereThereBeMonsters/toggl-to-jira/" class="uk-text-small">
           <span uk-icon="icon: github-alt; ratio: 0.8"></span>
