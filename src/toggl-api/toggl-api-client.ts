@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import TimeEntry from '@/toggl-api/time-entry';
 import { Duration } from 'luxon';
 
@@ -23,10 +23,15 @@ export class ToggleApiClient {
       .then(response => response.data);
   }
 
-  getEntries (): Promise<Array<TimeEntry>> {
-    return axios.get(`${this.baseUrl}/time_entries`, this.getConfig())
+  getEntries (startDate:Date, endDate:Date): Promise<Array<TimeEntry>> {
+    const url = encodeURI(
+      `${this.baseUrl}/time_entries?start_date=${startDate.toISOString()}&end_date=${endDate.toISOString()}`
+    );
+
+    return axios.get(url, this.getConfig())
       .then(response => {
-        const entries: Array<TimeEntry> = response.data.map((rawEntry: TogglTimeEntry) => TimeEntry.fromRawToggleEntry(rawEntry, this.importedTagName));
+        const entries: Array<TimeEntry> = response.data
+          .map((rawEntry: TogglTimeEntry) => TimeEntry.fromRawToggleEntry(rawEntry, this.importedTagName));
         return mergeEntriesWithSameDayDescriptionStatus(entries);
       });
   }
@@ -48,7 +53,7 @@ export class ToggleApiClient {
       .then(response => TimeEntry.fromRawToggleEntry(response.data.data, this.importedTagName));
   }
 
-  getConfig () {
+  getConfig (): AxiosRequestConfig {
     return {
       auth: { username: this.apiToken, password: 'api_token' }
     };

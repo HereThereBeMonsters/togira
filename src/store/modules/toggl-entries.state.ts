@@ -1,10 +1,12 @@
 import { ToggleApiClient } from '@/toggl-api/toggl-api-client';
 import TimeEntry from '@/toggl-api/time-entry';
-import { TimeEntryStatus } from '@/toggl-api/time-entry-status';
+import calendar from '@/utils/calendar';
 
 const initialState = {
   entries: null,
-  loading: false
+  loading: false,
+  filters: Object.getOwnPropertyNames(calendar),
+  selectedFilter: 'thisWeek'
 };
 
 const togglEntries = {
@@ -23,19 +25,32 @@ const togglEntries = {
     },
     loading (state: any, payload: any) {
       state.loading = payload.loading;
+    },
+    selectedFilter (state: any, payload: any) {
+      state.selectedFilter = payload.selectedFilter;
     }
   },
 
   actions: {
     // @ts-ignore
-    loadEntries ({ rootState, dispatch, commit, getters, rootGetters }) {
+    loadEntries ({ state, rootState, dispatch, commit, getters, rootGetters }, payload) {
       commit('loading', { loading: true });
+
+      // update selected filter if necessary
+      if (payload && payload.selectedFilter) {
+        commit('selectedFilter', { selectedFilter: payload.selectedFilter });
+      }
+
+      // @ts-ignore
+      const dates: [Date, Date] = calendar[state.selectedFilter]();
       const config = rootState.configuration;
       const toggl = new ToggleApiClient(
         config.togglApiKey,
         rootGetters['configuration/togglImportedTagName']
       );
-      toggl.getEntries().then(entries => {
+      toggl.getEntries(
+        ...dates
+      ).then(entries => {
         entries.sort((a, b) => (a.start > b.start) ? -1 : 1);
         commit('entries', { entries });
         commit('loading', { loading: false });

@@ -16,6 +16,24 @@
     </div>
 
     <div v-if="entries && !loading">
+      <form class="uk-margin-top uk-form-horizontal">
+        <div>
+          <label class="uk-form-label" title="A maximum of 1000 entries can be loaded from Toggl at once.">Show entries for:</label>
+          <div class="uk-form-controls">
+            <select v-model="selectedFilter" class="uk-select">
+              <option value="today">Today</option>
+              <option value="yesterday">Yesterday</option>
+              <option value="thisWeek">This week</option>
+              <option value="lastWeek">Last week</option>
+              <option value="thisMonth">This month</option>
+              <option value="lastMonth">Last month</option>
+              <option value="last7Days">The last 7 days</option>
+              <option value="last30Days">The last 30 days</option>
+              <option value="last90Days">The last 90 days</option>
+            </select>
+          </div>
+        </div>
+      </form>
       <div class="uk-margin-top">
         <button class="uk-button uk-button-default uk-button-small"
                 v-on:click="loadEntries"
@@ -106,20 +124,32 @@ import TimeEntryComponent from '@/components/TimeEntryComponent.vue';
 export default {
   name: 'toggl-entries',
   computed: {
-    entries: function () {
+    entries () {
       return this.$store.state.togglEntries.entries;
     },
-    days: function () {
+    days () {
       const allDays = this.$store.state.togglEntries.entries
         .map(entry => entry.day);
 
       return [...new Set(allDays)];
     },
-    selectedEntries: function () {
+    selectedEntries () {
       return this.$store.state.togglEntries.entries.filter(entry => entry.selected);
     },
     loading () {
       return this.$store.state.togglEntries.loading;
+    },
+    selectedFilter: {
+      get () {
+        return this.$store.state.togglEntries.selectedFilter;
+      },
+      set (value) {
+        this.$store.dispatch(
+          'togglEntries/loadEntries',
+          {
+            selectedFilter: value
+          });
+      }
     }
   },
   methods: {
