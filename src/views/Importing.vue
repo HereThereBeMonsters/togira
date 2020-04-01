@@ -1,3 +1,4 @@
+import TimeEntryComponent from "*.vue"
 <template>
   <div class="importing">
 
@@ -29,19 +30,29 @@
           <p>
             {{failedResults.length}} entries encountered a problem:
           </p>
-          <ul>
-            <li v-for="result in failedResults" v-bind:key="result.entry.id">
-              {{result.entry.jiraIssue}}:
-              {{result.message.name}} - {{result.message.message}}
-            </li>
-          </ul>
         </div>
       </div>
 
-      <button class="uk-button uk-button-primary" v-on:click="goToEntries()">
-        <span uk-icon="icon: arrow-left"></span>
-        Back to Toggl entries
-      </button>
+      <div>
+        <failed-time-entry-import v-for="result in failedResults"
+                                  v-bind:key="result.entry.id"
+                                  v-bind:timeEntry="result.entry"
+                                  v-bind:errorMessage="result.message.message"/>
+      </div>
+
+      <div class="uk-margin-top">
+
+        <button class="uk-button uk-button-primary" v-on:click="goToEntries()">
+          <span uk-icon="icon: arrow-left"></span>
+          Back to Toggl entries
+        </button>
+
+        <button class="uk-button uk-button-primary uk-margin-left" v-on:click="retryFailed()">
+          <span uk-icon="icon: refresh"></span>
+          Retry failed entries
+        </button>
+
+      </div>
     </div>
 
   </div>
@@ -70,6 +81,8 @@
 
 <script>
 
+import FailedTimeEntryImportComponent from '@/components/FailedTimeEntryImportComponent.vue';
+
 export default {
   name: 'importing',
   computed: {
@@ -96,8 +109,15 @@ export default {
     goToEntries () {
       this.$store.dispatch('togglEntries/loadEntries');
       this.$router.push('toggl-entries');
+    },
+
+    retryFailed () {
+      this.failedResults.forEach(result => (result.entry.selected = true));
+      this.$store.dispatch('importing/importSelectedEntries');
     }
   },
-  components: {}
+  components: {
+    'failed-time-entry-import': FailedTimeEntryImportComponent
+  }
 };
 </script>
