@@ -1,5 +1,7 @@
 # Togira
 
+![Alt text](readme/screenshot_toggl_entries.png "Screenshot of the Toggl entries screen")
+
 ## What it is
 
 Togira is a web-based tool that allows to interactively import Toggl time entries into a Jira instance as Jira issue work logs.
