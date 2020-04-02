@@ -60,6 +60,12 @@ npm run serve
 
 You can now access the app on http://localhost:8080/
 
+### Server proxy
+
+To prevent security problems, cross-domain AJAX requests are mostly blocked. To work around this, all API (Toggl and Jira) requests are made to the Togira server (e.g. localhost:8080) and the server is configured to forward those requests to the Respective Toggl and Jira servers.
+
+Besides this and the static HTML/JS/CSS app, Togira does not have it's own backend, no database or any other form of server storage or logic.
+
 ### Web UI
 
 The first thing you will have to do is fill the configuration:
@@ -68,7 +74,9 @@ The first thing you will have to do is fill the configuration:
 
 Most of the fields here are self-explanatory.
 
-One word about the label filed in the Toggl section: you can select a Toggl label that will be added to every time entry that is successfully imported into Jira.
+The Toggl API key can be found in your Toggl user profile.
+
+One word about the label field in the Toggl section: you can select a Toggl label that will be added to every time entry that is successfully imported into Jira.
 
 The label has to be created in Toggl first. If left empty, then no label will be added.
 
