@@ -112,6 +112,7 @@ export default {
     },
 
     retryFailed () {
+      this.importedResults.forEach(result => (result.entry.selected = false));
       this.failedResults.forEach(result => (result.entry.selected = true));
       this.$store.dispatch('importing/importSelectedEntries');
     }
