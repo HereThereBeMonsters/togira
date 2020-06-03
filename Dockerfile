@@ -16,12 +16,14 @@ WORKDIR /opt/togira
 #copy common proxy-config module
 COPY ./proxy-config ./proxy-config
 
-# Copy front-end bundles
-COPY ./frontend/dist ./frontend/dist
+# Copy front-end
+COPY ./frontend/ ./frontend/
 
-RUN ls -l
+# build front-end
+WORKDIR /opt/togira/frontend
+RUN [ "npm", "run", "build"]
 
-# Start node backend app on port 3000
-WORKDIR /opt/togira/backend
+# Start node backend app on port 3000 and expose the port
 EXPOSE 3000
+WORKDIR /opt/togira/backend
 CMD [ "npm", "start"]
