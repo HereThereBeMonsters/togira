@@ -21,7 +21,8 @@ COPY ./frontend/ ./frontend/
 
 # build front-end
 WORKDIR /opt/togira/frontend
-RUN [ "npm", "run", "build"]
+RUN npm install
+RUN npm run build
 
 # Start node backend app on port 3000 and expose the port
 EXPOSE 3000
