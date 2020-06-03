@@ -37,13 +37,15 @@ Quick summary of what Togira has to offer:
 
 There is a Docker image available, so all you need is to have Docker installed.
 
-The app is exposed on port 3000. To run the image:
+Image on Docker Hub: https://hub.docker.com/r/dockerzinho/togira
+
+The app is exposed via HTTP on port 3000. To run the image:
 
 ```
 docker run -p 3000:3000 -d dockerzinho/togira
 ```
 
-Then access it on http://localhost:3000 (or whatever the server is where you installed it).
+Then access it in your browser at http://localhost:3000 (or whatever server you installed it on).
 
 #### Front-end
 
