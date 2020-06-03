@@ -6,9 +6,9 @@
 
 Togira is a web-based tool that allows to interactively import Toggl time entries into a Jira instance as Jira issue work logs.
 
-It is meant for people who have to log their time in Jira, but prefer to use Toggl in their day to dat work, because of the much better UX.
+It is meant for people who have to log their time in Jira, but prefer to use Toggl in their day to dat work, because of the much better experience.
 
-This small project was an opportunity for me to learn new technologies (Vue.js and VueX) while solving an actual problem I had and not writing the N+1 bogus ToDo app.
+This small project was an opportunity for me to learn new technologies (Vue.js and VueX, and some Express) while solving an actual problem I had and so making my life better.
 
 I plan to maintain it as long as it is useful to myself.
 
@@ -18,53 +18,38 @@ Feedback and pull requests are welcome.
 
 Quick summary of what Togira has to offer:
 
-- Web based, run the server locally and access via your browser
+- Web based
 - Configure your Toggl account (username, API token)
-- Configure a Jira server and account
+- Configure a Jira server and account (Jira Cloud isn't supported at the moment!)
 - Load time entries from Toggl for a given time period
 - Detect Jira issue IDs in the description of the entries
 - Interactively select entries to import in the UI
 - Perform the import, i.e. add the time entries in Jira as work logs on their respective issue
-- View a log of the import operation (especially see which imports might have failed), optionally retry after fixing problems with the Jira issues
+- View a log of the import operation (especially see which imports might have failed)
+- Retry the failed entries after fixing problems with the Jira issues (e.g. re-open the issue to allow work logs)
 - Entries with the same date and with the same description are merged as a singe work log in Jira
-- Optionally, mark entries in Toggl as already imported with a tag. These entries will then be recognized by Togira as imported and will not be selectable for import again.
-
-## Roadmap / ideas
-
-The program works quite well as it is, but I have some ideas to improve it, that I will perhaps try to implement depending on available free time (no guarantees!):
-- Generate a Docker image, so it's easier to run anywhere
-- Maybe, investigate the conversion to an Electron app, or a Chrome or Firefox extension, so it can be used by people without any technical background
+- Optionally, mark entries in Toggl as already imported with a tag. These entries will then be recognized by Togira as already imported and will not be selectable for import again.
 
 ## How to use
 ### Requirements
 
-The app is based on Vue.js and Vue CLI. For now, it relies on the vue CLI dev server. So you will need a recent version of Node.js, and a little bit of command line magic to make it work.
+#### Backend
 
-Evergreen browsers should all work fine, but I develop and test only in Chrome (and derivatives) and sometimes in Firefox. 
+There is a Docker image available, so all you need is to have Docker installed.
 
-### Project setup
-Clone this repository.
-
-Open a command line, cd into the repository, and execute:
+The app is exposed on port 3000. To run the image:
 
 ```
-npm install
+docker run -p 3000:3000 -d dockerzinho/togira
 ```
 
-### Start server
+Then access it on http://localhost:3000 (or whatever the server is where you installed it).
 
-Run the follwing command:
-```
-npm run serve
-```
+#### Front-end
 
-You can now access the app on http://localhost:8080/
+Evergreen browsers should all work fine, but I develop and test only in Chrome (and derivatives) and sometimes in Firefox.
 
-### Server proxy
-
-To prevent security problems, cross-domain AJAX requests are mostly blocked. To work around this, all API (Toggl and Jira) requests are made to the Togira server (e.g. localhost:8080) and the server is configured to forward those requests to the Respective Toggl and Jira servers.
-
-Besides this and the static HTML/JS/CSS app, Togira does not have it's own backend, no database or any other form of server storage or logic.
+I have not made any effort to make it responsive or mobile-friendly in any way, so it will look ugly on small screens.
 
 ### Web UI
 
@@ -124,3 +109,32 @@ The back button takes you back to the toggle entries list.
 
 That's it. Enjoy! 
 
+## Development
+
+For development, or to run locally without using Docker:
+
+Clone this repository.
+
+Open a command line, cd into the repository, and execute:
+
+```
+./start.sh
+```
+
+This will build the front-end and start the backend.
+
+### Development Vue JS server
+
+Cd into the front-end directory and run the following command:
+```
+cd frontend
+npm run serve
+```
+
+You can now access the app on http://localhost:8080/
+
+### Server proxy
+
+To prevent security problems, cross-domain AJAX requests are mostly blocked. To work around this, all API (Toggl and Jira) requests are made to the Togira server (e.g. localhost:8080) and the server is configured to forward those requests to the corresponding Toggl and Jira API endpoints.
+
+Besides this proxying of the API requests and the serving of the static HTML/JS/CSS app, Togira does not have its own backend code. There is no database or any other form of server storage or logic.
