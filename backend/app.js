@@ -16,7 +16,7 @@ function customizeJiraRequest (proxyReq, req, res) {
   // Overwrite User Agent for requests to Jira, because Jira is stricter with browser user agents
   // and POST requests may fail, because of CSRF protection.
   // see: https://confluence.atlassian.com/jirakb/rest-api-calls-with-a-browser-user-agent-header-may-fail-csrf-checks-802591455.html
-  proxyReq.setHeader('user-agent', 'Toggl-to-Jira');
+  proxyReq.setHeader('user-agent', 'Togira');
 }
 
 app.listen(port, () => console.log(`Togira backend listening at http://localhost:${port}`));
