@@ -37,8 +37,8 @@
     "@vue/test-utils": "1.0.0-beta.29",
     "eslint": "7.23.0",
     "eslint-plugin-vue": "^5.0.0",
-    "less": "^3.10.3",
-    "less-loader": "^5.0.0",
+    "less": "4.1.1",
+    "less-loader": "7.3.0",
     "typescript": "~3.5.3",
     "vue-template-compiler": "^2.6.10"
   }
