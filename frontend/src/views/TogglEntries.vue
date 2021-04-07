@@ -8,7 +8,7 @@
       </button>
     </div>
 
-    <div v-if="loading">
+    <div id="loading-indicator" v-if="loading">
       <div uk-spinner></div>
       <span class="uk-margin-left">
         Loading entries from Toggl...
