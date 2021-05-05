@@ -123,6 +123,4 @@ export default class TimeEntryComponent extends Vue {
   font-weight: bold;
   flex-shrink: 0;
 }
-
-
 </style>

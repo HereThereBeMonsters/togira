@@ -59,6 +59,18 @@
         </button>
       </div>
 
+      <details>
+        <summary>
+          <h5>Summary of Toggl entries</h5>
+        </summary>
+        <table class="uk-table uk-table-divider">
+          <tr><td>Total duration in all valid entries: </td><td>{{summary.totalValidEntriesDuration}}</td></tr>
+          <tr><td>Total duration in all already imported entries: </td><td>{{summary.totalImportedEntriesDuration}}</td></tr>
+          <tr><td>Total duration in all selectable entries: </td><td>{{summary.totalSelectableEntriesDuration}}</td></tr>
+          <tr><td>Total duration in all selected entries: </td><td>{{summary.totalSelectedEntriesDuration}}</td></tr>
+        </table>
+      </details>
+
       <div v-for="day in days" v-bind:key="day" >
         <div class="day-time-entries uk-margin-medium-top">
           <div class="day-time-entries--header">
@@ -129,6 +141,7 @@
 <script>
 
 import TimeEntryComponent from '@/components/TimeEntryComponent.vue';
+import { TimeEntryStatus } from '@/toggl-api/time-entry-status'
 
 export default {
   name: 'toggl-entries',
@@ -159,6 +172,14 @@ export default {
             selectedFilter: value
           });
       }
+    },
+    summary () {
+      return {
+        totalValidEntriesDuration: calculateTotalDuration(this.entries.filter(it => it.status !== TimeEntryStatus.Invalid)),
+        totalSelectedEntriesDuration: calculateTotalDuration(this.selectedEntries),
+        totalSelectableEntriesDuration: calculateTotalDuration(this.entries.filter(it => it.selectable)),
+        totalImportedEntriesDuration: calculateTotalDuration(this.entries.filter(it => it.status === TimeEntryStatus.Imported))
+      };
     }
   },
   methods: {
@@ -180,14 +201,20 @@ export default {
       return this.entries.filter(entry => entry.day === day);
     },
     getTotalDurationForDay (day) {
-      return this.entries
-        .filter(entry => entry.day === day)
-        .reduce((total, entry) => entry.duration.plus(total), 0)
-        .toFormat('h:mm');
+      return calculateTotalDuration(this.entries.filter(entry => entry.day === day));
     }
   },
   components: {
     'time-entry': TimeEntryComponent
   }
 };
+
+function calculateTotalDuration (timeEntries) {
+  if (!timeEntries || !timeEntries.length) {
+    return '0:00';
+  }
+  return timeEntries
+    .reduce((total, entry) => entry.duration.plus(total), 0)
+    .toFormat('h:mm');
+}
 </script>
