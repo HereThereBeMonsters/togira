@@ -62,7 +62,7 @@ export default class TimeEntry {
   }
 
   get day (): string {
-    return this.start.toFormat('yyyy-MM-dd ccc');
+    return this.start.toFormat('cccc yyyy.MM.dd');
   }
 
   get startTime (): string {

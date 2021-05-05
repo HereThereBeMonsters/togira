@@ -20,15 +20,15 @@
         {{timeEntry.jiraIssue}}
       </a>
     </div>
-    <div class="time-entry--duration">
-      {{timeEntry.durationFormatted}}
+    <div class="time-entry--description">
+      {{timeEntry.description}}
     </div>
     <div class="time-entry--times">
       <span uk-icon="icon: clock; ratio: 0.7"></span>
       {{timeEntry.startTime}} ↦ {{timeEntry.endTime}}
     </div>
-    <div class="time-entry--description">
-      {{timeEntry.description}}
+    <div class="time-entry--duration">
+      {{timeEntry.durationFormatted}}
     </div>
   </div>
 </template>
@@ -107,12 +107,6 @@ export default class TimeEntryComponent extends Vue {
   flex-shrink: 0;
 }
 
-.time-entry--duration {
-  width: 55px;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-
 .time-entry--times {
   width: 140px;
   flex-shrink: 0;
@@ -124,5 +118,11 @@ export default class TimeEntryComponent extends Vue {
   flex-grow: 1;
   font-size: 0.9em;
 }
+
+.time-entry--duration {
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
 
 </style>

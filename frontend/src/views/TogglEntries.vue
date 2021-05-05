@@ -63,7 +63,12 @@
         <div class="day-time-entries uk-margin-medium-top">
           <div class="day-time-entries--header">
             <span uk-icon="icon: calendar; ratio: 0.7"></span>
-            <span class="day-time-entries--header--day">{{day}}</span>
+            <span class="day-time-entries--header--day">
+              {{day}}
+            </span>
+            <span class="day-time-entries--header--total-duration">
+              {{getTotalDurationForDay(day)}}
+            </span>
           </div>
           <time-entry v-for="entry in getEntriesForDay(day)" v-bind:key="entry.id" v-bind:timeEntry="entry"/>
         </div>
@@ -110,8 +115,12 @@
       font-weight: bold;
       border-bottom: 1px solid @globcol-grey-lighter;
       padding-left: 9px;
+      padding-right: 6px;
       .day-time-entries--header--day {
         margin-left: 6px;
+      }
+      .day-time-entries--header--total-duration {
+        float: right;
       }
     }
   }
@@ -169,6 +178,12 @@ export default {
     },
     getEntriesForDay (day) {
       return this.entries.filter(entry => entry.day === day);
+    },
+    getTotalDurationForDay (day) {
+      return this.entries
+        .filter(entry => entry.day === day)
+        .reduce((total, entry) => entry.duration.plus(total), 0)
+        .toFormat('h:mm');
     }
   },
   components: {
