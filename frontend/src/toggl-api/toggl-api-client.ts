@@ -36,12 +36,14 @@ export class ToggleApiClient {
       });
   }
 
-  addTagToEntry (entry: TimeEntry, tag: TogglTag) : Promise<TimeEntry> {
+  addTagToEntries (entries: Array<TimeEntry>, tag: TogglTag) : Promise<any> {
     // the tag must be added to all merged entries in Toggl
-    const idsParam = entry.mergedFrom ? entry.mergedFrom.join(',') : entry.id;
+    const entryIdsParam = entries.flatMap(entry => {
+      return entry.mergedFrom ? entry.mergedFrom : entry.id;
+    }).join(',');
 
     return axios.put(
-      `${this.baseUrl}/time_entries/${idsParam}`,
+      `${this.baseUrl}/time_entries/${entryIdsParam}`,
       {
         time_entry: {
           tags: [tag.name],
@@ -49,8 +51,7 @@ export class ToggleApiClient {
         }
       },
       this.getConfig()
-    )
-      .then(response => TimeEntry.fromRawToggleEntry(response.data.data, this.importedTagName));
+    );
   }
 
   getConfig (): AxiosRequestConfig {

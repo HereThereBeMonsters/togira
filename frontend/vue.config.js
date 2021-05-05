@@ -8,7 +8,7 @@ module.exports = {
     loaderOptions: {
       less: {
         lessOptions: {
-          math: 'always' // needed with less >4 and UIKit
+          math: 'always' // needed with Less v4+ and UIKit
         }
       }
     }

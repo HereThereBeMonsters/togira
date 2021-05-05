@@ -102,7 +102,8 @@ export default {
       return this.importedResults.length + this.failedResults.length;
     },
     percentDone () {
-      return (this.totalDone / this.selectedEntries.length) * 100;
+      // The adding of tags in Toggl is done separately as a single request, so we consider Jira import to be 95%
+      return Math.round((this.totalDone / this.selectedEntries.length) * 95);
     }
   },
   methods: {

@@ -42,7 +42,7 @@ const importingState = {
 
   actions: {
     // @ts-ignore
-    importSelectedEntries ({ rootState, dispatch, commit, getters, rootGetters }) {
+    importSelectedEntries ({ state, rootState, commit, rootGetters }) {
       const config = rootState.configuration;
       const jira = new JiraApiClient(config.jiraTargetHost, config.jiraUsername, config.jiraPassword);
       const toggl = new ToggleApiClient(config.togglApiKey, rootGetters['configuration/togglImportedTagName']);
@@ -52,34 +52,28 @@ const importingState = {
       commit('resetFailedEntryResults');
       commit('importing', { importing: true });
 
-      const promises = selectedEntries
-        .map((entry:TimeEntry) => {
-          console.log('Importing time entry to Jira:', entry);
+      const jiraPromises = selectedEntries
+        .map((timeEntry:TimeEntry) => {
+          console.log('Importing time entry to Jira:', timeEntry);
 
-          return jira.addWorkLog(entry)
+          return jira.addWorkLog(timeEntry)
             .then((result: any) => {
-              if (config.togglImportedTag) {
-                console.log('imported to Jira successfully, now adding imported tag in Toggl');
-                toggl.addTagToEntry(entry, config.togglImportedTag);
-              }
-            })
-            .then((result: any) => {
-              console.log('Entry imported successfully.');
+              console.log('Entry imported successfully: ', result);
               commit('addImportedEntryResult', {
                 result:
                   {
-                    entry,
+                    timeEntry,
                     success: true,
                     message: 'Imported OK'
                   }
               });
             })
             .catch((error: any) => {
-              console.log('Import failed:', entry, error);
+              console.log('Import failed:', timeEntry, error);
               commit('addFailedEntryResult', {
                 result:
                   {
-                    entry,
+                    timeEntry,
                     success: false,
                     message: error
                   }
@@ -87,7 +81,16 @@ const importingState = {
             });
         });
 
-      return Promise.all(promises)
+      return Promise.all(jiraPromises)
+        .then(() => {
+          console.log('Jira import completed.');
+          if (config.togglImportedTag) {
+            console.log('Now adding imported tag in Toggl...');
+            const importedTimeEntries = state.importedEntriesResults
+              .map((it: ImportEntryResult) => it.timeEntry);
+            toggl.addTagToEntries(importedTimeEntries, config.togglImportedTag);
+          }
+        })
         .finally(() => commit('importing', { importing: false }));
     }
   }
