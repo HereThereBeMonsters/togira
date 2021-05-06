@@ -4,13 +4,13 @@
 
 ## What it is
 
-Togira is a web-based tool that allows to interactively import Toggl time entries into a Jira instance as Jira issue work logs.
+Togira is a web-based app that allows to interactively import Toggl time entries into a Jira instance as Jira issue work logs.
 
-It is meant for people who have to log their time in Jira, but prefer to use Toggl in their day to dat work, because of the much better experience.
+It is meant for people who have to log their time in Jira, but prefer to use Toggl in their day-to-day work, because of the much better user experience.
 
-This small project was an opportunity for me to learn new technologies (Vue.js and VueX, and some Express) while solving an actual problem I had and so making my life better.
+This is a personal project that I started to ease the pain of having to import the time entries manually, and as  an opportunity to learn new technologies (Vue.js and VueX, and some Express) while solving a real-life problem.
 
-I plan to maintain it as long as it is useful to myself.
+I plan to maintain it for as long as it is useful to myself.
 
 Feedback and pull requests are welcome. 
 
@@ -19,7 +19,7 @@ Feedback and pull requests are welcome.
 Quick summary of what Togira has to offer:
 
 - Web based
-- Configure your Toggl account (username, API token)
+- Configure your Toggl account (using your API token)
 - Configure a Jira server and account (Jira Cloud isn't supported at the moment!)
 - Load time entries from Toggl for a given time period
 - Detect Jira issue IDs in the description of the entries
@@ -51,7 +51,7 @@ Then access it in your browser at http://localhost:3000 (or whatever server you 
 
 Evergreen browsers should all work fine, but I develop and test only in Chrome (and derivatives) and sometimes in Firefox.
 
-I have not made any effort to make it responsive or mobile-friendly in any way, so it will look ugly on small screens.
+I have not made any effort to make it responsive or mobile-friendly in any way, so it will look ugly or weird on small screens.
 
 ### Web UI
 
@@ -67,9 +67,9 @@ One word about the label field in the Toggl section: you can select a Toggl labe
 
 The label has to be created in Toggl first. If left empty, then no label will be added.
 
-Togira will detect the label when it loads entries from Toggl, and entries with the label will have the status "Imported" and will not be selectable for import again.
+Togira will detect the label when it loads entries from Toggl, and entries that already have the label will have the status "Imported" and so will not be selectable for import again.
 
-_Warning: All the configuration values are stored in the borwser's local storage. As these contain sensible data, be careful and if necessary wipe your browser's private data after using Togira! I plan to add a button to manually reset the config._
+_Warning: All the configuration values are stored in the browser's local storage. As these contain sensible data, be careful and if necessary use private mode or wipe your browser's browsing data after using Togira! I plan to add a button to manually reset the config._
 
 Once you are finished with the configuration, it's time to load Toggl entries. Click on the "TOGGL ENTRIES" menu entry and then click the "Load Toggle Entries button":
  
@@ -93,7 +93,7 @@ You can change the period using the select menu:
 
 The buttons on the left allow you to reload the entries, select all (selectable) entries or deselect all entries.
 
-You can also select any entry by clicking anywhere on it, except the Jira issue ID which is a link to the Jira issue itself.
+You can also select any entry by clicking anywhere on it, except the Jira issue ID which is a link to the Jira issue itself. If you click on the day's header, all entries for that day will be selected, or if they already are, unselected.
 
 The icon on the left of each entry shows the entry's status: incoming, imported or ongoing. Only the incoming entries can be imported to Jira. The imported status is determined through the Toggl tag mentioned above in the configuration section.
 
@@ -137,6 +137,6 @@ You can now access the app on http://localhost:8080/
 
 ### Server proxy
 
-To prevent security problems, cross-domain AJAX requests are mostly blocked. To work around this, all API (Toggl and Jira) requests are made to the Togira server (e.g. localhost:8080) and the server is configured to forward those requests to the corresponding Toggl and Jira API endpoints.
+To prevent security problems, cross-domain AJAX requests are mostly blocked in web browsers. To work around this, all API (Toggl and Jira) requests are made to the Togira server (e.g. localhost:8080) and the server is configured to proxy those requests to the corresponding Toggl and Jira API endpoints.
 
-Besides this proxying of the API requests and the serving of the static HTML/JS/CSS app, Togira does not have its own backend code. There is no database or any other form of server storage or logic.
+Besides this proxying of the API requests and the serving of the static HTML/JS/CSS app, Togira does not have any backend logic: There is no database or any other form of server storage or logic, nothing is persisted or logged.
