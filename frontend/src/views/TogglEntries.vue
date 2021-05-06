@@ -147,7 +147,7 @@
 <script>
 
 import TimeEntryComponent from '@/components/TimeEntryComponent.vue';
-import { TimeEntryStatus } from '@/toggl-api/time-entry-status'
+import { TimeEntryStatus } from '@/toggl-api/time-entry-status';
 
 export default {
   name: 'toggl-entries',
@@ -209,7 +209,7 @@ export default {
     getTotalDurationForDay (day) {
       return calculateTotalDuration(this.entries.filter(entry => entry.day === day));
     },
-    toggleSelectEntriesForDay(day) {
+    toggleSelectEntriesForDay (day) {
       const selectableDayEntries = this.entries.filter(entry => entry.day === day && entry.selectable);
       const allSelected = !selectableDayEntries.some(it => !it.selected);
       selectableDayEntries.forEach(it => (it.selected = !allSelected));
