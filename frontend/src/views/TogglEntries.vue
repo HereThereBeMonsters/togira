@@ -73,7 +73,7 @@
 
       <div v-for="day in days" v-bind:key="day" >
         <div class="day-time-entries uk-margin-medium-top">
-          <div class="day-time-entries--header">
+          <div class="day-time-entries--header" v-on:click="toggleSelectEntriesForDay(day)">
             <span uk-icon="icon: calendar; ratio: 0.7"></span>
             <span class="day-time-entries--header--day">
               {{day}}
@@ -126,8 +126,14 @@
     .day-time-entries--header {
       font-weight: bold;
       border-bottom: 1px solid @globcol-grey-lighter;
+      cursor: pointer;
+      padding: 6px;
       padding-left: 9px;
-      padding-right: 6px;
+
+      &:hover {
+        background-color: @globcol-green-light;
+      }
+
       .day-time-entries--header--day {
         margin-left: 6px;
       }
@@ -202,6 +208,11 @@ export default {
     },
     getTotalDurationForDay (day) {
       return calculateTotalDuration(this.entries.filter(entry => entry.day === day));
+    },
+    toggleSelectEntriesForDay(day) {
+      const selectableDayEntries = this.entries.filter(entry => entry.day === day && entry.selectable);
+      const allSelected = !selectableDayEntries.some(it => !it.selected);
+      selectableDayEntries.forEach(it => (it.selected = !allSelected));
     }
   },
   components: {
