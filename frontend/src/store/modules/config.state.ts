@@ -134,7 +134,8 @@ function restoreConfig (commit: any) {
 function restoreConfigField (persistedConfig: any, commit: any, fieldName: string) {
   const value = persistedConfig[fieldName];
   if (value) {
-    console.log(`Restoring config field '${fieldName}' to value: '${value}'`);
+    const isSecret = ['togglApiKey', 'jiraPassword'].includes(fieldName);
+    console.log(`Restoring config field '${fieldName}' to value: ${isSecret ? '******' : JSON.stringify(value)}`);
     commit(fieldName, { [fieldName]: value });
   }
 }
