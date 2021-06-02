@@ -35,8 +35,8 @@ import TimeEntryComponent from "*.vue"
 
       <div>
         <failed-time-entry-import v-for="result in failedResults"
-                                  v-bind:key="result.entry.id"
-                                  v-bind:timeEntry="result.entry"
+                                  v-bind:key="result.timeEntry.id"
+                                  v-bind:timeEntry="result.timeEntry"
                                   v-bind:errorMessage="result.message.message"/>
       </div>
 
@@ -113,8 +113,8 @@ export default {
     },
 
     retryFailed () {
-      this.importedResults.forEach(result => (result.entry.selected = false));
-      this.failedResults.forEach(result => (result.entry.selected = true));
+      this.importedResults.forEach(result => (result.timeEntry.selected = false));
+      this.failedResults.forEach(result => (result.timeEntry.selected = true));
       this.$store.dispatch('importing/importSelectedEntries');
     }
   },

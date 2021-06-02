@@ -46,45 +46,18 @@ const importingState = {
       const config = rootState.configuration;
       const jira = new JiraApiClient(config.jiraTargetHost, config.jiraUsername, config.jiraPassword);
       const toggl = new ToggleApiClient(config.togglApiKey, rootGetters['configuration/togglImportedTagName']);
-      const selectedEntries = rootGetters['togglEntries/selectedEntries'];
+      const selectedEntries:Array<TimeEntry> = rootGetters['togglEntries/selectedEntries'];
 
       commit('resetImportedEntryResults');
       commit('resetFailedEntryResults');
       commit('importing', { importing: true });
 
-      const jiraPromises = selectedEntries
-        .map((timeEntry:TimeEntry) => {
-          console.log('Importing time entry to Jira:', timeEntry);
+      const jiraPromises = selectedEntries.map((it:TimeEntry) => importEntryToJira(it, jira, commit));
 
-          return jira.addWorkLog(timeEntry)
-            .then((result: any) => {
-              console.log('Entry imported successfully: ', result);
-              commit('addImportedEntryResult', {
-                result:
-                  {
-                    timeEntry,
-                    success: true,
-                    message: 'Imported OK'
-                  }
-              });
-            })
-            .catch((error: any) => {
-              console.log('Import failed:', timeEntry, error);
-              commit('addFailedEntryResult', {
-                result:
-                  {
-                    timeEntry,
-                    success: false,
-                    message: error
-                  }
-              });
-            });
-        });
-
-      return Promise.all(jiraPromises)
+      return Promise.allSettled(jiraPromises)
         .then(() => {
           console.log('Jira import completed.');
-          if (config.togglImportedTag) {
+          if (config.togglImportedTag && state.importedEntriesResults.length) {
             console.log('Now adding imported tag in Toggl...');
             const importedTimeEntries = state.importedEntriesResults
               .map((it: ImportEntryResult) => it.timeEntry);
@@ -97,3 +70,31 @@ const importingState = {
 };
 
 export default importingState;
+
+function importEntryToJira (timeEntry:TimeEntry, jira:JiraApiClient, commit: (key:string, payload:any) => any) {
+  console.log('Importing time entry to Jira:', timeEntry);
+
+  return jira.addWorkLog(timeEntry)
+    .then((result: any) => {
+      console.log('Entry imported successfully: ', result);
+      commit('addImportedEntryResult', {
+        result:
+          {
+            timeEntry,
+            success: true,
+            message: 'Imported OK'
+          }
+      });
+    })
+    .catch((error: any) => {
+      console.log('Import failed:', timeEntry, error);
+      commit('addFailedEntryResult', {
+        result:
+          {
+            timeEntry,
+            success: false,
+            message: error
+          }
+      });
+    });
+}
