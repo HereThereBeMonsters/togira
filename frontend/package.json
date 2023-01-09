@@ -15,7 +15,7 @@
     "axios": "0.21.1",
     "core-js": "3.10.0",
     "lodash": "4.17.21",
-    "luxon": "1.26.0",
+    "luxon": "2.5.2",
     "uikit": "3.6.19",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
